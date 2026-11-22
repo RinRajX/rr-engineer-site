@@ -13,7 +13,7 @@
     if(!r.ok)throw{code:"server_unavailable",message:"Google answered "+r.status};
     try{j=await r.json()}catch(e){throw{code:"upstream_error",message:"Unreadable answer from Google."}}
     if(j&&j.error==="denied"){throw{code:"denied",message:"Access key rejected."}}
-    if(j&&j.error)throw{code:"tool_error",message:String(j.error)};
+    if(j&&j.error)throw{code:"tool_error",message:/bad op/.test(j.error)&&/^drive_/.test(op)?"Files need the updated Google script (see setup note).":String(j.error)};
     return (j&&j.result)||{};
   }
 
@@ -35,8 +35,11 @@
       try{return{payload:await sheets(name,input)}}
       catch(e){if(e&&e.code==="denied"){setKey("");e={code:"tool_error",message:"Your access key was rejected. Reload the page and enter it again."}}throw e}
     }
-    if(server==="Miro")throw{code:"tool_error",message:"Miro sync works only in the Claude dashboard."};
-    if(server==="Google Drive")throw{code:"tool_error",message:"Files work only in the Claude dashboard for now."};
+    if(server==="Miro")throw{code:"tool_error",message:"Miro is updated from the Claude dashboard. Your map is saved to the Sheet and shows in both copies."};
+    if(server==="Google Drive"){
+      if(name==="create_file")return{payload:await call("drive_create",{name:input.title,mime:input.contentMimeType,b64:input.base64Content})};
+      if(name==="download_file_content")return{payload:await call("drive_get",{id:input.fileId})};
+    }
     throw{code:"tool_error",message:server+" works only in the Claude dashboard."};
   }};
 
