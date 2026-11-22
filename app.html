@@ -3007,10 +3007,10 @@ var ms=document.getElementById("mmSt");if(ms)new MutationObserver(function(){var
 #trMenu{position:fixed;z-index:3100;display:none;min-width:190px;background:#fff;color:#000;border:1px solid #000;border-radius:9px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.25);font:13px system-ui,sans-serif}
 #trMenu.on{display:block}#trMenu div{padding:8px 12px;border-radius:6px;cursor:pointer;display:flex;justify-content:space-between;gap:16px}#trMenu div:hover{background:#ff7a00;color:#fff}#trMenu em{opacity:.6;font-style:normal;font-size:11px}
 </style>
-<div id="trPanel"><h4><b id="trTitle">Discuss with Claude</b> <span id="trSt"></span></h4><div id="trList"></div><div id="trFoot"><div>Type <b>DD</b> in the chat to discuss these.</div><div class="b"><button type="button" id="trClear" class="w">Clear all</button></div></div></div>
+<div id="trPanel"><h4><b id="trTitle">Discuss with Claude</b> <span id="trSt" hidden></span><button type="button" id="trSel" title="Select items" aria-label="Select items" aria-pressed="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="6" height="6" rx="1.5"/><path d="M4.6 7l1.1 1.1L7.6 6"/><rect x="3" y="14" width="6" height="6" rx="1.5"/><path d="M4.6 17l1.1 1.1L7.6 16"/><path d="M13 7h8M13 17h8"/></svg></button></h4><div id="trList"></div><div id="trFoot"><div>Type <b>DD</b> in the chat to discuss these.</div><div class="b"><button type="button" id="trClear" class="w">Clear all</button><button type="button" id="trSend" tabindex="-1"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.1 6.4 6.4 2.1-6.4 2.1L12 19.5l-2.1-6.4L3.5 11l6.4-2.1z"/></svg><span>Claude</span><em id="trSendN"></em></button></div></div></div>
 <div id="trToast"></div><div id="trMenu"><div id="trMenuGo"><span>Discuss with Claude</span><em>Alt+Click</em></div></div>
 <script>(function(){
-var KEY="rrTray",TR=[],DB=null,tm=null,HV=0,CUR="dy",BTN=null,MODE="",PX=-1,PY=-1,CT=null;
+var KEY="rrTray",TR=[],DB=null,tm=null,HV=0,SELK={},CIC='<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.1 6.4 6.4 2.1-6.4 2.1L12 19.5l-2.1-6.4L3.5 11l6.4-2.1z"/></svg>',CUR="dy",BTN=null,MODE="",PX=-1,PY=-1,CT=null;
 try{TR=JSON.parse(localStorage.getItem(KEY))||[]}catch(z){}
 var $=function(i){return document.getElementById(i)},P=$("trPanel");
 var NAMES={dy:"Dumpyard",rr:"RR Engineer",pl:"Prompt Library"};
@@ -3033,7 +3033,7 @@ function add(o){o.g=gOf(o);var k=[o.src,o.id||"",o.g,o.path||"",o.name].join("|"
 function draw(){var L=$("trList");if(!L)return;var h=$("trTitle");if(h)h.textContent="Discuss with Claude · "+NAMES[CUR];
   var arr=mine(CUR);
   if(!arr.length){L.innerHTML='<div style="padding:14px;color:#666;font-size:12.5px">Nothing yet in this tab. Alt+Click any item here, or right-click and choose Discuss with Claude.</div>';return}
-  L.innerHTML=arr.map(function(t){var i=TR.indexOf(t);return '<div class="trI"><b>'+esc(t.name||"(untitled)")+'</b><small>'+(t.path?esc(t.path)+" · ":"")+esc(t.kind||"")+'</small><div class="r"><input data-n="'+i+'" placeholder="Add a note (optional)" value="'+esc(t.note||"")+'"><button data-x="'+i+'" title="Remove">&#10005;</button></div></div>'}).join("")}
+  L.innerHTML=arr.map(function(t){var i=TR.indexOf(t);return '<div class="trI"><b>'+esc(t.name||"(untitled)")+'</b><small>'+(t.path?esc(t.path)+" · ":"")+esc(t.kind||"")+'</small><div class="r"><span class="trL"><button type="button" class="trC" data-c="'+i+'" title="Send to Claude" aria-label="Send to Claude">'+CIC+'</button><label class="trK" title="Select"><input type="checkbox" data-k="'+i+'"'+(SELK[t.k||i]!==false?' checked':'')+'><i></i></label></span><input data-n="'+i+'" placeholder="Add a note (optional)" value="'+esc(t.note||"")+'"><button data-x="'+i+'" title="Remove">&#10005;</button></div></div>'}).join("")}
 function addIds(ids){var n=0;(ids||[]).forEach(function(id){var x=window.__rrInfo&&window.__rrInfo(id);if(x&&add({src:"registry",id:id,tab:x.tab,kind:x.kind,name:x.name,path:x.path,type:x.type}))n++})}
 function addMap(t,mk){mk=(mk==="dm"||mk==="pl")?mk:"rr";var G={rr:"rr",dm:"dy",pl:"pl"}[mk],TN={rr:"RR Engineer",dm:"Dumpyard",pl:"Prompt Library"}[mk],f=window[mk==="rr"?"__mmInfo":"__nfo_"+mk],i=t&&f?f(t.id):null;
   if(!i||!i.name){add({src:"map",g:G,tab:TN+" › Mind Map",kind:"Mind map",name:"Whole mind map",path:""});return}
@@ -3078,7 +3078,7 @@ function wire(d){if(!d||d.__tr)return;d.__tr=1;var fr=d!==document;
   d.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".phtr");
     if(b){e.preventDefault();e.stopPropagation();if(MODE==="pin"&&BTN===b)closeP();else openFor(b,"pin");return}
     if(e.altKey){var w=whatIs(e);if(w){e.preventDefault();e.stopPropagation();act(w)}return}
-    if(MODE==="pin"&&!(e.target.closest&&e.target.closest("#trPanel")))closeP()},true);
+    if(MODE==="pin"&&!(e.target.closest&&e.target.closest("#trPanel,#trCp")))closeP()},true);
   d.addEventListener("mousedown",function(e){if(e.altKey&&whatIs(e))e.stopPropagation()},true);
   if(fr){d.addEventListener("contextmenu",function(e){var w=whatIs(e);if(!w||!(w.one&&/prompt|tab/.test(w.one.src)))return;e.preventDefault();var f=frameK();PEND=w;MN.style.left=Math.min(f.x+e.clientX*f.k,innerWidth-210)+"px";MN.style.top=Math.min(f.y+e.clientY*f.k,innerHeight-60)+"px";MN.classList.add("on")},true);d.addEventListener("click",hideMenu)}
 }
@@ -3104,7 +3104,29 @@ new MutationObserver(function(){ensure(document)}).observe(document.body,{childL
 $("trList").addEventListener("input",function(e){var n=e.target.getAttribute("data-n");if(n==null)return;TR[+n].note=e.target.value;try{localStorage.setItem(KEY,JSON.stringify(TR))}catch(z){}clearTimeout(tm);tm=setTimeout(pushDb,700)});
 $("trList").addEventListener("click",function(e){var x=e.target.closest("[data-x]");if(!x)return;TR.splice(+x.getAttribute("data-x"),1);persist()});
 $("trClear").onclick=function(){TR=TR.filter(function(t){return gOf(t)!==CUR});persist()};
+/* ---- send to Claude: one item, or selected items (copy window; a page cannot post into the chat itself) ---- */
+function line(t,n){var s=(n?n+". ":"")+"["+(t.tab||NAMES[gOf(t)]||"")+"] "+(t.name||"(untitled)")+(t.kind?" — "+t.kind:"");if(t.path)s+="\n   Path: "+t.path;if(t.id)s+="\n   ID: "+t.id;if(t.note)s+="\n   Note: "+t.note;return s}
+function pack(list){return "Discuss with Claude — RR Engineer dashboard ("+list.length+" item"+(list.length>1?"s":"")+")\n\n"+list.map(function(t,k){return line(t,list.length>1?k+1:0)}).join("\n\n")}
+var CP=document.createElement("div");CP.id="trCp";CP.setAttribute("role","dialog");CP.setAttribute("aria-modal","true");
+CP.innerHTML='<div class="c"><div class="h"><b>Send to Claude</b><button type="button" class="x" aria-label="Close" title="Close (Esc)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><textarea readonly spellcheck="false"></textarea><p>Copy, then paste it in the Claude chat (Ctrl+V). In Claude you can also just type <b>DD</b>.</p><button type="button" class="go">'+CIC+'<span>Copy for Claude</span></button></div>';
+document.body.appendChild(CP);
+var CPT=CP.querySelector("textarea"),CPG=CP.querySelector(".go");
+function cpOpen(list){if(!list.length){say("Select at least one item");return}CPT.value=pack(list);CPG.classList.remove("ok");CPG.querySelector("span").textContent="Copy for Claude";CP.classList.add("on");setTimeout(function(){CPG.focus()},60)}
+function cpClose(){CP.classList.remove("on")}
+CP.querySelector(".x").onclick=cpClose;CP.addEventListener("mousedown",function(e){if(e.target===CP)cpClose()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&CP.classList.contains("on")){e.stopPropagation();cpClose()}},true);
+CPG.onclick=async function(){var ok=false,t=CPT.value;try{await navigator.clipboard.writeText(t);ok=true}catch(z){}
+  if(!ok){try{CPT.focus();CPT.select();ok=document.execCommand("copy")}catch(z){}}
+  var sp=CPG.querySelector("span");if(ok){CPG.classList.add("ok");sp.textContent="Copied";setTimeout(function(){CPG.classList.remove("ok");sp.textContent="Copy for Claude"},1000)}else{CPT.focus();CPT.select();sp.textContent="Press Ctrl+C to copy"}};
+function selOn(){return P.classList.contains("trsm")}
+function selCount(){var n=0;mine(CUR).forEach(function(t){if(SELK[t.k||TR.indexOf(t)]!==false)n++});$("trSendN").textContent=n?String(n):"";$("trSend").disabled=!n}
+$("trSel").onclick=function(){var on=!selOn();P.classList.toggle("trsm",on);this.setAttribute("aria-pressed",String(on));this.title=on?"Done selecting":"Select items";
+  $("trSend").tabIndex=on?0:-1;if(on){SELK={};[].forEach.call($("trList").querySelectorAll("[data-k]"),function(c){c.checked=true})}selCount()};
+$("trList").addEventListener("change",function(e){var c=e.target.closest("[data-k]");if(!c)return;var t=TR[+c.getAttribute("data-k")];if(t)SELK[t.k||+c.getAttribute("data-k")]=c.checked;selCount()});
+$("trList").addEventListener("click",function(e){var c=e.target.closest("[data-c]");if(!c)return;var t=TR[+c.getAttribute("data-c")];if(t)cpOpen([t])});
+$("trSend").onclick=function(){cpOpen(mine(CUR).filter(function(t){return SELK[t.k||TR.indexOf(t)]!==false}))};
 draw();cnt();if(TR.length)setTimeout(pushDb,1500);
+var _d=draw;draw=function(){_d();if(selOn())selCount()};
 window.__tray={addIds:addIds,addMap:addMap,add:add};
 window.__TRR=function(){var a=null;try{a=JSON.parse(localStorage.getItem(KEY))}catch(z){}if(!Array.isArray(a))return;TR=a;cnt();draw();clearTimeout(tm);tm=setTimeout(pushDb,350)};
 })();</script>
@@ -5255,6 +5277,40 @@ window.rrViewFile=async function(fl,blob){
 .sw.au.pk:not(.pin)>.sd{box-shadow:10px 0 26px -6px rgba(16,36,59,.22);border-radius:0 10px 10px 0}
 .sw.au>.sd{will-change:transform}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+<style id="trSendCss">
+#trSel{flex:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:1px solid #000;border-radius:8px;background:#fff;color:#000;cursor:pointer;padding:0;transition:background .18s ease,color .18s ease,border-color .18s ease,transform .15s ease}
+#trSel:hover{transform:translateY(-1px)}#trSel:active{transform:scale(.94)}
+#trPanel.trsm #trSel{background:#d97757;border-color:#d97757;color:#fff}
+.trI .trL{position:relative;flex:none;width:28px;height:28px}
+.trI .trL>*{position:absolute;inset:0;transition:opacity .18s ease,transform .22s cubic-bezier(.2,.8,.2,1)}
+.trI .trC{width:28px;height:28px;padding:0;display:flex;align-items:center;justify-content:center;background:#d97757!important;border-color:#d97757!important;color:#fff!important}
+.trI .trC:hover{background:#c4613f!important;border-color:#c4613f!important}
+.trI .trK{display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:scale(.6);pointer-events:none}
+.trI .trK input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.trI .trK i{width:20px;height:20px;border:1.5px solid #000;border-radius:6px;background:#fff;display:block;transition:background .15s ease,border-color .15s ease}
+.trI .trK input:checked+i{background:#d97757;border-color:#d97757;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");background-size:15px;background-position:center;background-repeat:no-repeat}
+.trI .trK input:focus-visible+i{outline:2px solid #d97757;outline-offset:2px}
+#trPanel.trsm .trI .trC{opacity:0;transform:scale(.6);pointer-events:none}
+#trPanel.trsm .trI .trK{opacity:1;transform:none;pointer-events:auto}
+#trFoot .b{display:flex!important;align-items:center;gap:8px;width:100%;min-width:0;height:auto!important;padding:0!important;margin:0!important;border:0!important;background:none!important;box-shadow:none!important;transform:none!important}
+#trFoot .b>button{min-width:0;height:34px}
+#trFoot #trSend{flex:0 0 0;max-width:0;min-width:0;padding:0;border-width:0;opacity:0;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;background:#d97757;color:#fff;pointer-events:none;transition:flex-grow .26s cubic-bezier(.2,.8,.2,1),max-width .26s cubic-bezier(.2,.8,.2,1),opacity .2s ease,background .18s ease,transform .15s ease}
+#trPanel.trsm #trFoot #trSend{flex:1 1 0;max-width:400px;border-width:1px;border-color:#d97757;opacity:1;pointer-events:auto}
+#trFoot #trSend:hover{background:#c4613f}#trFoot #trSend:disabled{opacity:.55;cursor:default}
+#trSend em{font-style:normal;font-size:11px;background:#fff;color:#c4613f;border-radius:9px;padding:0 6px;line-height:17px}#trSend em:empty{display:none}
+#trCp{position:fixed;inset:0;z-index:3200;display:flex;align-items:center;justify-content:center;background:rgba(16,36,59,.5);opacity:0;visibility:hidden;transition:opacity .16s ease,visibility 0s linear .16s}
+#trCp.on{opacity:1;visibility:visible;transition:opacity .16s ease}
+#trCp .c{background:#fff;color:#111;border:1px solid #111;border-radius:12px;width:min(520px,92vw);padding:14px;display:grid;gap:10px;box-shadow:0 18px 50px rgba(0,0,0,.3);font:13px system-ui,sans-serif;transform:translateY(10px) scale(.985);transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+#trCp.on .c{transform:none}
+#trCp .h{display:flex;align-items:center;justify-content:space-between;color:#111!important;padding:0!important;margin:0!important;background:none!important;border:0!important;text-transform:none!important;letter-spacing:0!important;font-size:14px!important}#trCp .h b{font-size:14px;color:#111}
+#trCp .x{width:30px;height:30px;border:1px solid #000;border-radius:8px;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:background .18s,color .18s,border-color .18s}
+#trCp .x:hover{background:#c0262d;color:#fff;border-color:#c0262d}
+#trCp textarea{width:100%;box-sizing:border-box;height:190px;resize:vertical;background:#fff!important;color:#000!important;border:1px solid #000!important;border-radius:8px;padding:8px 10px;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace}
+#trCp p{margin:0;color:#333;font-size:12px}
+#trCp .go{height:36px;border:1px solid #d97757;border-radius:8px;background:#d97757;color:#fff;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .18s ease,border-color .18s ease,transform .15s ease}
+#trCp .go:hover{background:#c4613f;border-color:#c4613f;transform:translateY(-1px)}#trCp .go:active{transform:scale(.97)}
+#trCp .go.ok{background:#1f9d55;border-color:#1f9d55}
 </style>
 <style id="viewFix">
 /* item content: the whole view scrolls down to the files and preview */
