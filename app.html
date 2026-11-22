@@ -783,7 +783,7 @@ function mkEx(sp,host,o){
       b.textContent="…";
       try{var bl=await fileBlob(f);
         if(b.dataset.fa==="d"){var u=URL.createObjectURL(bl),a=document.createElement("a");a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);b.textContent="Download"}
-        else{var pv=V.querySelector(".fpv");b.textContent="Preview";if(/^image\//.test(f.mime)){pv.innerHTML='<img alt="" style="max-width:100%;border-radius:8px">';pv.firstChild.src=URL.createObjectURL(bl)}else{var tx=await bl.text();pv.innerHTML='<pre class="mt"></pre>';pv.firstChild.textContent=tx.slice(0,20000)}}
+        else{var pv=V.querySelector(".fpv");b.textContent="Preview";if(/^image\//.test(f.mime)){pv.innerHTML='<img alt="" style="max-width:100%;border-radius:8px">';pv.firstChild.onload=function(){pv.scrollIntoView({behavior:"smooth",block:"start"})};pv.firstChild.src=URL.createObjectURL(bl)}else{var tx=await bl.text();pv.innerHTML='<pre class="mt"></pre>';pv.firstChild.textContent=tx.slice(0,20000);pv.scrollIntoView({behavior:"smooth",block:"start"})}}
       }catch(er){toast(errMsg(er));b.textContent=b.dataset.fa==="d"?"Download":"Preview"}
     }});
     var c=V.querySelector(".cpy");if(c)c.onclick=function(){var t=V.querySelector(".mt").textContent;try{navigator.clipboard.writeText(t)}catch(e){}c.classList.add("g");setTimeout(function(){c.classList.remove("g")},1000)};
@@ -5113,6 +5113,26 @@ if(!ov){ov=document.createElement("div");ov.id="mbOv";ov.innerHTML='<div class="
 ov.hidden=false;
 if(!ok){ms.hidden=false;fetch("masterbook.html",{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){fr.srcdoc=t;ok=1;ms.hidden=true}).catch(function(){ms.innerHTML='Could not load it here. <a href="'+url+'" target="_blank" rel="noopener">Open the Master Book in a new tab</a>'})}};
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ov&&!ov.hidden)shut()},true)})();</script>
+<style id="viewFix">
+/* item content: the whole view scrolls down to the files and preview */
+.sw.au>.exw.exw:has(>.vw.mv),.exw.exw:has(>.vw.mv){overflow-y:auto!important;overscroll-behavior:contain}
+.exw.exw>.vw.mv{flex:none!important}
+.vw.mv .fz{max-height:none!important;overflow:visible!important}
+.vw.mv .fpv img{display:block;height:auto}
+/* side panel icon: hidden while the panel is locked closed, shows when the cursor comes near */
+.sw.au.lk>.sh{opacity:0;pointer-events:none;transition:opacity .18s ease,left .24s ease,background .15s}
+.sw.au.lk.shv>.sh{opacity:1;pointer-events:auto}
+</style>
+<script id="sideAuto">(function(){
+function near(e){document.querySelectorAll(".sw.au").forEach(function(w){
+  if(!w.classList.contains("lk")){w.classList.remove("shv");return}
+  var b=w.querySelector(":scope>.sh");if(!b)return;var r=b.getBoundingClientRect();if(!r.height){w.classList.remove("shv");return}
+  var on=e&&e.clientX>=r.left-10&&e.clientX<=r.right+40&&e.clientY>=r.top-40&&e.clientY<=r.bottom+40;
+  w.classList.toggle("shv",!!on)})}
+document.addEventListener("mousemove",near,{passive:true});
+document.documentElement.addEventListener("mouseleave",function(){near(null)});
+window.addEventListener("blur",function(){near(null)});
+})();</script>
 <script id="mapSync">/* Live sync between the Claude dashboard and the website copy, through the Google Sheet "Maps" tab:
    mind maps + Discuss tray are copied there; any data change bumps "sync:rev" so the other copy refreshes. */
 (function(){
