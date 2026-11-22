@@ -5220,13 +5220,9 @@ window.rrViewFile=async function(fl,blob){
   catch(e){if(s===SEQ)msg("This file could not be shown here ("+String((e&&e.message)||e).slice(0,120)+").",1)}
 };
 })();</script>
-<style id="sideTemp">/* TEMPORARY side panel trial: Dumpyard = option 1 (own box), RR Engineer = option 2 (open space) */
-#pDump .sw.au>.sd{border:1px solid #dfe4ea!important;border-radius:10px;background:#f5f7f9!important;padding:8px 6px!important}
-#pDump .sw.au.pk>.sd{box-shadow:6px 0 18px rgba(0,0,0,.12)}
-#pDump .sw.au.pk>.exw,#pDump .sw.au.pin>.exw{padding-left:242px!important}
-#pDump .sw.au.pk>.sh,#pDump .sw.au.pin>.sh{left:231px!important}
-#pRR .sw.au>.sd{border-right:0!important}
-#pRR .sw.au.pk>.exw,#pRR .sw.au.pin>.exw{padding-left:254px!important}
+<style id="sideFinal">/* side panels in all tabs: no divider line, open space before the content */
+.sw.au>.sd{border-right:0!important}
+.sw.au.pk>.exw,.sw.au.pin>.exw{padding-left:254px!important}
 </style>
 <style id="viewFix">
 /* item content: the whole view scrolls down to the files and preview */
