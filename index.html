@@ -5110,5 +5110,56 @@ if(!ov){ov=document.createElement("div");ov.id="mbOv";ov.innerHTML='<div class="
 ov.hidden=false;
 if(!ok){ms.hidden=false;fetch("masterbook.html",{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){fr.srcdoc=t;ok=1;ms.hidden=true}).catch(function(){ms.innerHTML='Could not load it here. <a href="'+url+'" target="_blank" rel="noopener">Open the Master Book in a new tab</a>'})}};
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ov&&!ov.hidden)shut()},true)})();</script>
+<script id="mapSync">/* Mind maps: keep a copy in the Google Sheet "Maps" tab so the Claude dashboard and the website share them */
+(function(){
+var MK={rrBoardCopy1:"rrBoardDay",dmFirstCopy1:"dmFirstDay",plBoardCopy1:"plBoardDay"},RG="Maps!A1:Z20";
+var LS;try{LS=window.localStorage}catch(e){return}if(!LS||!window.Storage)return;
+var SP=Storage.prototype,ORIG=SP.setItem,BASE={},TS={},NW={},PEND={},T=0,READY=0,BUSY=0;
+function put(k,v){try{ORIG.call(LS,k,v)}catch(e){}}
+function lget(k){try{return LS.getItem(k)}catch(e){return null}}
+SP.setItem=function(k,v){ORIG.apply(this,arguments);if(this===LS&&MK[k])queue(k)};
+function queue(k){PEND[k]=1;clearTimeout(T);T=setTimeout(flush,3000)}
+function on(){return typeof mcp!=="undefined"&&mcp&&typeof tool==="function"&&typeof readRange==="function"}
+async function readMaps(){
+  var v=await readRange(RG),o={};
+  for(var i=1;i<v.length;i++){var r=v[i];if(r&&r[0]&&MK[r[0]])o[r[0]]={row:i+1,ts:+r[1]||0,n:Math.max(0,r.length-2),val:r.slice(2).map(function(c){return c==null?"":String(c)}).join("")}}
+  return o;
+}
+async function flush(){
+  if(!READY||BUSY){clearTimeout(T);T=setTimeout(flush,3000);return}
+  var keys=Object.keys(PEND).filter(function(k){return lget(k)&&lget(k)!==BASE[k]});PEND={};
+  if(!keys.length)return;
+  BUSY=1;
+  try{
+    var cur=await readMaps();
+    for(var i=0;i<keys.length;i++){
+      var k=keys[i],val=lget(k)||"",r=cur[k];
+      if(r&&r.ts>(TS[k]||0)&&r.val!==val){if(typeof toast==="function")toast("A mind map was changed in the other copy. Reload this page to get it (your last change here will be replaced).");continue}
+      var ts=Date.now(),cells=splitSafe(val,LIB_CHUNK).map(function(c){return "'"+c}),row=[k,"'"+ts].concat(cells),w=Math.max(cells.length,r?r.n:0);
+      while(row.length<2+w)row.push("");
+      if(r)await tool("update_values",{spreadsheetId:SHEET_ID,range:"Maps!A"+r.row+":"+colName(row.length-1)+r.row,values:[row]});
+      else await tool("append_values",{spreadsheetId:SHEET_ID,range:"Maps!A1",values:[row]});
+      BASE[k]=val;TS[k]=ts;put("mapTs:"+k,String(ts));
+    }
+  }catch(e){keys.forEach(function(k){PEND[k]=1});clearTimeout(T);T=setTimeout(flush,20000)}
+  BUSY=0;
+}
+async function pull(){
+  try{
+    var cur=await readMaps();
+    Object.keys(MK).forEach(function(k){
+      var r=cur[k],loc=lget(k),lts=+lget("mapTs:"+k)||0;
+      if(r&&r.val){
+        BASE[k]=r.val;TS[k]=r.ts;
+        if(r.val===loc)put("mapTs:"+k,String(r.ts));
+        else if(r.ts>lts||!loc){put(k,r.val);put(MK[k],today());put("mapTs:"+k,String(r.ts))}
+        else PEND[k]=1;
+      }else if(loc)PEND[k]=1;
+    });
+    READY=1;if(Object.keys(PEND).length){clearTimeout(T);T=setTimeout(flush,1500)}
+  }catch(e){setTimeout(pull,30000)}
+}
+(function wait(){if(on())pull();else setTimeout(wait,1000)})();
+})();</script>
 </body>
 </html>
