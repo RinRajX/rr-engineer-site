@@ -7,7 +7,11 @@ src = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8")
 tag = '<head>\n'
 assert src.count(tag) >= 1, "no <head> found"
 inject = ('<head>\n<meta name="robots" content="noindex,nofollow">\n'
-          '<script src="rr-shim.js"></script>\n')
+          '<script src="rr-shim.js"></script>\n'
+          # Centered 50% column like the Claude side panel; transform keeps pop-ups inside it
+          '<style id="rrSiteFrame">html{background:#f4f5f7}'
+          'body{width:50vw;min-width:min(720px,100vw);margin:0 auto!important;'
+          'transform:translateZ(0);box-shadow:0 0 0 1px #d9e0e6,0 0 24px rgba(0,0,0,.06);overflow:hidden}</style>\n')
 out = src.replace(tag, inject, 1)
 here = pathlib.Path(__file__).parent
 (here / "index.html").write_text(out, encoding="utf-8")
