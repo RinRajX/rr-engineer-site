@@ -9,6 +9,7 @@
 <head>
 <meta name="robots" content="noindex,nofollow">
 <script src="rr-shim.js"></script>
+<script id="mobDetect">(function(){try{var c=matchMedia("(pointer:coarse)").matches,s=Math.min(screen.width,screen.height);if(c||(navigator.maxTouchPoints>0&&s<=900))document.documentElement.classList.add("mob")}catch(e){}})()</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RR Engineer</title>
@@ -5494,82 +5495,99 @@ document.addEventListener("visibilitychange",function(){if(document.visibilitySt
 (function wait(){if(on())pull();else setTimeout(wait,1000)})();
 })();</script>
 <style id="mobCss">
-/* ===== Phone / touch layer: only on touch screens, desktop unchanged ===== */
-@media (hover:none) and (pointer:coarse){
-html,body{-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-text-size-adjust:100%;overscroll-behavior:none}
-body{height:100dvh}
-button,.tab,.chip,.t,.l,.sr,.mi,.phd,.phb,.sh,.cr,.nv,#fdHead,#bkHead{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
-.t,.l,.sr,.chip,.mi,button{touch-action:manipulation}
-/* no zoom-in when typing (iOS zooms inputs under 16px) */
-input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea,.q,.nt,.sn,#mmQ,#dmQ,#plQ{font-size:16px!important}
-.q::placeholder{font-size:14px}
-/* top tabs bar: three equal tabs that fit the phone */
-#top{grid-template-columns:auto minmax(0,1fr) auto!important;gap:4px!important;padding:6px!important;padding-top:max(6px,env(safe-area-inset-top))!important;min-height:0!important}
-#top .tc{gap:3px!important;min-width:0}
-#top .tc .tab,#top .tab{flex:1 1 0;width:auto!important;min-width:0;padding:10px 3px!important;font-size:11px!important;letter-spacing:.2px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#status{display:none!important}#stxt{display:none!important}
-#refresh,#dlBtn{padding:8px!important}
-/* heading: title never runs under the buttons */
-.phd{padding:0 100px}.phd h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font-size:13px}
-/* bigger touch targets in menus */
-#menu .mi,.mi{padding:12px 14px!important;min-height:44px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between}
-#menu .k,.mi .k{display:none}
-/* side panel = slide-over drawer (content is never squeezed) */
-.sw.au>.exw{padding-left:26px!important}
-.sw.au .sd{width:min(290px,84vw)!important;box-shadow:none;padding:4px 8px 10px 6px!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-.sw.au.pk .sh,.sw.au.pin .sh{left:min(290px,84vw)!important}.sw.au.pk .sd,.sw.au.pin .sd{box-shadow:6px 0 24px rgba(0,0,0,.18)}
-.sw.au .sh{width:24px!important;height:58px!important;margin-top:-29px!important;opacity:1!important;pointer-events:auto!important}
-.sw.au .nvh2{display:none!important}
-.sw.au .sd .sr{padding:10px 8px;min-height:42px;box-sizing:border-box}
-.mbk{position:absolute;inset:0;z-index:5;background:rgba(17,36,58,.28);opacity:0;transition:opacity .22s ease;pointer-events:none}
-.sw.au.pk>.mbk,.sw.au.pin>.mbk{opacity:1;pointer-events:auto}
-/* tag row and chips */
-.tg{-webkit-overflow-scrolling:touch;cursor:auto}.chip{padding:7px 13px}
-/* scrolling areas feel native */
-.ps,.exw,.vw,.sd,#bkBox,#fdBox{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-/* mind maps: the canvas handles every touch (one finger pan, two fingers zoom) */
-#mmCv,#dmCv,#plCv{touch-action:none!important;-webkit-user-select:none;user-select:none}
-#mmTool,#dmTool,#plTool{flex-wrap:nowrap!important;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;gap:6px!important;padding:8px 8px!important}
-#mmTool::-webkit-scrollbar,#dmTool::-webkit-scrollbar,#plTool::-webkit-scrollbar{display:none}
-#mmTool>*,#dmTool>*,#plTool>*{flex:none}
-#mmTools,#dmTools,#plTools{max-width:calc(100vw - 24px);overflow-x:auto;scrollbar-width:none}
-#mmView,#dmView,#plView{min-height:0}
-/* design Edit mode: panel becomes a bottom sheet, page keeps full width */
-body.ed.po,body.ed{padding-left:0!important;--pw:0px!important}
-#edPanel{top:auto!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;height:min(54dvh,520px)!important;border:0!important;border-top:1px solid var(--bd2)!important;border-radius:16px 16px 0 0!important;transform:translateY(105%)!important;box-shadow:0 -8px 26px #0003!important;padding-bottom:max(12px,env(safe-area-inset-bottom))!important;overscroll-behavior:contain}
-body.ed.po #edPanel.on{transform:none!important}
-#edPh{top:auto!important;margin-top:0!important;left:0!important;bottom:calc(env(safe-area-inset-bottom) + 76px)!important;width:28px!important;height:58px!important;transition:bottom .26s ease,background .15s!important}
-body.ed.po #edPh{left:0!important;bottom:calc(min(54dvh,520px) + 10px)!important}
-#edPh svg{transform:rotate(-90deg)!important}#edPh.shut svg{transform:rotate(-90deg)!important}body.ed.po #edPh svg{transform:rotate(90deg)!important}
-html body.ed:not(.edpv) #edBar{left:50%!important;transform:translate(-50%,0)!important;pointer-events:auto!important;bottom:max(12px,env(safe-area-inset-bottom))!important;max-width:calc(100vw - 16px);-webkit-overflow-scrolling:touch;scrollbar-width:none;transition:bottom .26s ease!important}
-html body.ed.po:not(.edpv) #edBar{bottom:calc(min(54dvh,520px) + 10px)!important}
-#edBar button{padding:9px 11px}
-#edHint{display:none!important}
-html body #edTb{left:8px!important;right:8px!important;top:calc(60px + env(safe-area-inset-top))!important;bottom:auto!important;max-width:none;overflow-x:auto;scrollbar-width:none}
-#edGrip,#edBox,#edBox *{touch-action:none}
-/* pop-ups and panels fit the screen */
-#trMenu em{display:none}#trMenuGo{padding:12px 14px!important}
-
-#dlMenu,#tlMenu,#trPanel,#trMenu,#edCp,#edCm{max-width:calc(100vw - 16px)!important}
-#trPanel{max-height:calc(100dvh - 90px)!important}
-#gtt{bottom:max(22px,calc(env(safe-area-inset-bottom) + 14px))}
-}
+html.mob,html.mob body{-webkit-tap-highlight-color:transparent;touch-action:pan-x pan-y;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+html.mob body{height:100dvh}
+html.mob *{scrollbar-width:none!important}
+html.mob *::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+html.mob button,html.mob .tab,html.mob .chip,html.mob .t,html.mob .l,html.mob .sr,html.mob .mi,html.mob .phd,html.mob .phb,html.mob .sh,html.mob .cr,html.mob #fdHead,html.mob #bkHead,html.mob .mmb,html.mob .sbb{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+html.mob input:not([type=checkbox]):not([type=radio]):not([type=range]),html.mob select,html.mob textarea,html.mob .q,html.mob .nt,html.mob .sn,html.mob #mmQ,html.mob #dmQ,html.mob #plQ{font-size:16px!important}
+html.mob .q::placeholder{font-size:14px}
+html.mob button:not(.phb):not(.sh):not(#refresh):not(#dlBtn),html.mob .bt,html.mob .btn,html.mob .mmb,html.mob .chip,html.mob .tab{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+html.mob button>span,html.mob .bt>span,html.mob .chip>span,html.mob #fdHead>span:first-child,html.mob #bkHead>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+html.mob .bkt .bt{flex:1 1 0;padding-left:6px!important;padding-right:6px!important;font-size:12.5px}
+html.mob .t .nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
+html.mob .t,html.mob .l,html.mob .sr,html.mob .chip,html.mob .mi,html.mob .bt,html.mob .b,html.mob .mmb,html.mob .phb,html.mob .tab{transition:transform .14s cubic-bezier(.2,.8,.2,1),background-color .18s ease,color .18s ease,opacity .18s ease!important}
+html.mob .t:active,html.mob .l:active,html.mob .sr:active,html.mob .chip:active,html.mob .mi:active{transform:scale(.97)}
+html.mob .bt:active,html.mob .b:active,html.mob .mmb:active,html.mob .phb:active,html.mob .tab:active{transform:scale(.95)}
+html.mob .panel:not([hidden]){animation:mobIn .26s cubic-bezier(.2,.8,.2,1)}
+html.mob #top{grid-template-columns:auto minmax(0,1fr) auto!important;gap:8px!important;padding:7px 8px!important;padding-top:max(7px,env(safe-area-inset-top))!important;min-height:0!important;background:#111!important;transition:transform .32s cubic-bezier(.2,.8,.2,1)!important;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+html.mob #top .tl,html.mob #top .tr{gap:6px!important}
+html.mob #top .tc{display:flex!important;gap:2px!important;padding:3px!important;background:#262626;border-radius:11px;min-width:0}
+html.mob #top .tab,html.mob #top .tc .tab{flex:1 1 0;width:auto!important;min-width:0;margin:0!important;padding:8px 2px!important;font-size:10.5px!important;font-weight:600!important;letter-spacing:.35px!important;border-radius:8px!important;color:#a9a9a9!important;background:transparent!important;text-align:center}
+html.mob #top .tab.on{background:#fff!important;color:#111!important}
+html.mob #status,html.mob #stxt{display:none!important}
+html.mob #refresh,html.mob #dlBtn{width:34px;height:34px;padding:0!important;border-radius:10px!important;background:#1d1d1d!important;border-color:#444!important}
+html.mob .phd{padding:0 98px!important}
+html.mob .phd h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font-size:12.5px!important;letter-spacing:.35px!important}
+html.mob #menu .mi,html.mob .mi{padding:12px 14px!important;min-height:44px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between}
+html.mob #menu .k,html.mob .mi .k,html.mob #trMenu em{display:none!important}
+html.mob #trMenuGo{padding:12px 14px!important}
+html.mob .sw.au>.exw,html.mob #pDump #exDy,html.mob #exRr,html.mob #exFd,html.mob .sw>.exw{overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-left:10px!important;padding-right:10px!important;padding-bottom:max(18px,env(safe-area-inset-bottom))!important}
+html.mob .exw:has(>.vw.mv),html.mob .sw.au>.exw:has(>.vw.mv){overflow-y:auto!important;display:block!important;height:100%}
+html.mob .vw.mv{flex:none!important;overflow:visible!important;max-height:none!important;min-height:0!important;display:block!important}
+html.mob .vw.mv .mc{flex:none!important;overflow:visible!important;display:flex!important;flex-direction:column;min-width:0!important;width:100%}
+html.mob .vw.mv .mc>*{min-width:0;max-width:100%;box-sizing:border-box}
+html.mob .vw.mv .dd,html.mob .vw.mv .mt{width:100%!important}
+html.mob .vw.mv .dd{flex:none!important;overflow:hidden!important;min-height:36dvh!important;max-height:none!important;resize:none}
+html.mob .vw.mv .mt{flex:none!important;max-height:none!important;overflow:visible!important;min-height:0!important}
+html.mob .vw.mv .fz{max-height:none!important;overflow:visible!important}
+html.mob .fd .vw,html.mob #fdWrap.open #exFd .vw{max-height:none!important;overflow:visible!important}
+html.mob .vw{overflow:visible!important}
+html.mob .sw.au .sd{width:min(290px,84vw)!important;box-shadow:none;padding:6px 8px 12px 8px!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;transition:transform .3s cubic-bezier(.2,.8,.2,1)!important;will-change:transform}
+html.mob .sw.au.pk .sd,html.mob .sw.au.pin .sd{box-shadow:8px 0 28px rgba(0,0,0,.2)}
+html.mob .sw.au .sh{width:14px!important;height:46px!important;margin-top:-23px!important;opacity:.9!important;pointer-events:auto!important;border-radius:0 9px 9px 0!important;transition:left .3s cubic-bezier(.2,.8,.2,1),background .15s!important}
+html.mob .sw.au .sh svg{width:11px;height:11px}
+html.mob .sw.au.pk .sh,html.mob .sw.au.pin .sh{left:min(290px,84vw)!important}
+html.mob .sw.au .nvh2{display:none!important}
+html.mob .sw.au .sd .sr{padding:10px 8px;min-height:42px;box-sizing:border-box}
+html.mob .mbk{position:absolute;inset:0;z-index:5;background:rgba(17,36,58,.3);opacity:0;transition:opacity .3s ease;pointer-events:none}
+html.mob .sw.au.pk>.mbk,html.mob .sw.au.pin>.mbk{opacity:1;pointer-events:auto}
+html.mob .tg{-webkit-overflow-scrolling:touch;cursor:auto}
+html.mob .chip{padding:7px 12px}
+html.mob .ps,html.mob .sd,html.mob #bkBox,html.mob #fdBox,html.mob #bkTx,html.mob .vw{-webkit-overflow-scrolling:touch}
+html.mob #mmCv,html.mob #dmCv,html.mob #plCv,html.mob #mmCv *,html.mob #dmCv *,html.mob #plCv *{touch-action:none!important;-webkit-user-select:none;user-select:none}
+html.mob #mmTool,html.mob #dmTool,html.mob #plTool{flex-wrap:nowrap!important;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;gap:6px!important;padding:8px!important}
+html.mob #mmTool>*,html.mob #dmTool>*,html.mob #plTool>*{flex:none}
+html.mob #mmTools,html.mob #dmTools,html.mob #plTools{max-width:calc(100vw - 24px);overflow-x:auto}
+html.mob body.ed.po,html.mob body.ed{padding-left:0!important;--pw:0px!important}
+html.mob #edPanel{top:auto!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;height:min(54dvh,520px)!important;border:0!important;border-top:1px solid var(--bd2)!important;border-radius:16px 16px 0 0!important;transform:translateY(105%)!important;box-shadow:0 -8px 26px #0003!important;padding-bottom:max(12px,env(safe-area-inset-bottom))!important;overscroll-behavior:contain;transition:transform .32s cubic-bezier(.2,.8,.2,1)!important}
+html.mob body.ed.po #edPanel.on{transform:none!important}
+html.mob #edPh{top:auto!important;margin-top:0!important;left:0!important;bottom:calc(env(safe-area-inset-bottom) + 76px)!important;width:28px!important;height:58px!important;transition:bottom .32s cubic-bezier(.2,.8,.2,1),background .15s!important}
+html.mob body.ed.po #edPh{left:0!important;bottom:calc(min(54dvh,520px) + 10px)!important}
+html.mob #edPh svg,html.mob #edPh.shut svg{transform:rotate(-90deg)!important}
+html.mob body.ed.po #edPh svg{transform:rotate(90deg)!important}
+html.mob body.ed:not(.edpv) #edBar{left:50%!important;transform:translate(-50%,0)!important;pointer-events:auto!important;bottom:max(12px,env(safe-area-inset-bottom))!important;max-width:calc(100vw - 16px);transition:bottom .32s cubic-bezier(.2,.8,.2,1)!important}
+html.mob body.ed.po:not(.edpv) #edBar{bottom:calc(min(54dvh,520px) + 10px)!important}
+html.mob #edBar button{padding:9px 11px}
+html.mob #edHint{display:none!important}
+html.mob body #edTb{left:8px!important;right:8px!important;top:calc(60px + env(safe-area-inset-top))!important;bottom:auto!important;max-width:none;overflow-x:auto}
+html.mob #edGrip,html.mob #edBox,html.mob #edBox *{touch-action:none}
+html.mob #dlMenu,html.mob #tlMenu,html.mob #trPanel,html.mob #trMenu,html.mob #edCp,html.mob #edCm{max-width:calc(100vw - 16px)!important}
+html.mob #trPanel{max-height:calc(100dvh - 90px)!important}
+html.mob #gtt{bottom:max(22px,calc(env(safe-area-inset-bottom) + 14px))}
+html.mob #edTb button,html.mob #edBar button,html.mob #edPanel button,html.mob #edCp button,html.mob #edDlg button,html.mob #edTb .tc{overflow:visible!important;text-overflow:clip!important;flex:none!important}
+html.mob #edTb button{min-width:28px!important}
+@keyframes mobIn{from{opacity:0}to{opacity:1}}
+#mobNav{position:fixed;z-index:9999;top:0;width:44px;height:44px;border-radius:50%;background:#11243a;color:#fff;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s ease,background .15s;box-shadow:0 4px 16px rgba(0,0,0,.3);will-change:transform}#mobNav.l{left:-8px}#mobNav.r{right:-8px}#mobNav.r svg{transform:rotate(180deg)}#mobNav.go{background:#1f9d55}
 </style>
-<script id="mobJs">(function(){
-var MQ=window.matchMedia&&matchMedia("(hover:none) and (pointer:coarse)");
-function isMob(){return !!(MQ&&MQ.matches)}
-var lastTouch=0;
-/* ---------- one setup per document (main page + Prompt Library frame) ---------- */
+<script id="mobJs">window.__MOB_FCSS="html.mob,html.mob body{-webkit-tap-highlight-color:transparent;touch-action:pan-x pan-y;-webkit-text-size-adjust:100%}\nhtml.mob *{scrollbar-width:none!important}\nhtml.mob *::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}\nhtml.mob input:not([type=checkbox]):not([type=radio]),html.mob select,html.mob textarea{font-size:16px!important}\nhtml.mob header{padding-left:98px!important;padding-right:98px!important}\nhtml.mob header h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px!important;letter-spacing:.35px!important}\nhtml.mob .version-pill,html.mob #versionBadge{margin-left:4px!important}\nhtml.mob .custom-scroll{display:none!important}\nhtml.mob .view-track>.view-panel{padding-left:12px!important;padding-right:12px!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}\nhtml.mob button,html.mob summary,html.mob .prompt-row,html.mob .entry-btn{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}\nhtml.mob .btn,html.mob .view-option,html.mob .additional-toggle{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}\nhtml.mob .btn:active,html.mob .view-option:active,html.mob .prompt-row:active{transform:scale(.97)}\nhtml.mob .prompt-row,html.mob .btn,html.mob .view-option{transition:transform .14s cubic-bezier(.2,.8,.2,1),background-color .18s ease,color .18s ease!important}\nhtml.mob .drag-handle{padding:8px 6px;font-size:22px;touch-action:none}\nhtml.mob .view-track{transition:transform .34s cubic-bezier(.2,.8,.2,1)!important}";
+(function(){
+var R=document.documentElement;
+function isMob(){return R.classList.contains("mob")}
+var lastTouch=0,EDGE=24;
+function rootOf(d){return d.documentElement}
+
+/* ---------- per document: main page + Prompt Library frame ---------- */
 function wire(d,inFrame){
   if(!d||d.__mob)return;d.__mob=1;
   var win=d.defaultView||window;
-  /* remember when a finger touched, to ignore the fake mouse events phones send after a tap */
   d.addEventListener("pointerdown",function(e){if(e.pointerType==="touch")lastTouch=Date.now()},true);
   d.addEventListener("pointerup",function(e){if(e.pointerType==="touch")lastTouch=Date.now()},true);
   d.addEventListener("touchend",function(){lastTouch=Date.now()},{capture:true,passive:true});
+  /* phones send fake mouse moves after a tap; they must not open hover-only things */
   ["mousemove","mouseover","mouseout","mouseenter","mouseleave"].forEach(function(n){
     win.addEventListener(n,function(e){if(isMob()&&Date.now()-lastTouch<900)e.stopImmediatePropagation()},true)});
-  /* long press = right click (menus, Move to, Discuss with Claude, map menus) */
+  /* long press = right click */
   var LP=null,fired=0;
   function lpClear(){if(LP){clearTimeout(LP.t);LP=null}}
   d.addEventListener("pointerdown",function(e){
@@ -5577,15 +5595,13 @@ function wire(d,inFrame){
     var t=e.target;if(t.closest&&t.closest("input,textarea,select,[contenteditable=true]"))return;
     LP={x:e.clientX,y:e.clientY,el:t,t:setTimeout(function(){
       if(!LP)return;var p=LP;LP=null;fired=Date.now();
-      try{win.navigator.vibrate&&win.navigator.vibrate(12)}catch(x){}
-      var ev=new win.MouseEvent("contextmenu",{bubbles:true,cancelable:true,composed:true,clientX:p.x,clientY:p.y,screenX:p.x,screenY:p.y,button:2,buttons:0,view:win});
-      p.el.dispatchEvent(ev);
-    },480)};
+      try{win.navigator.vibrate&&win.navigator.vibrate(10)}catch(x){}
+      p.el.dispatchEvent(new win.MouseEvent("contextmenu",{bubbles:true,cancelable:true,composed:true,clientX:p.x,clientY:p.y,screenX:p.x,screenY:p.y,button:2,buttons:0,view:win}));
+    },470)};
   },true);
   d.addEventListener("pointermove",function(e){if(LP&&e.pointerType==="touch"&&Math.abs(e.clientX-LP.x)+Math.abs(e.clientY-LP.y)>10)lpClear()},true);
   ["pointerup","pointercancel"].forEach(function(n){d.addEventListener(n,function(e){if(e.pointerType==="touch")lpClear()},true)});
   d.addEventListener("scroll",lpClear,true);
-  /* after our long press: drop the phone's own long-press menu and the click that follows */
   d.addEventListener("contextmenu",function(e){if(e.isTrusted&&isMob()&&Date.now()-fired<1500){e.preventDefault();e.stopImmediatePropagation()}},true);
   d.addEventListener("click",function(e){if(Date.now()-fired<700){e.preventDefault();e.stopImmediatePropagation()}},true);
   /* top tabs bar: tap the heading title to show it, tap anywhere else to hide it */
@@ -5601,100 +5617,159 @@ function wire(d,inFrame){
     if(downHidden===null||!isMob())return;var h=e.target.closest&&e.target.closest("h1");
     if(h&&h.closest("header,.phd"))document.body.classList.toggle("thide",!downHidden);downHidden=null;
   },true);
+  /* the module text grows with its content, the page scrolls instead */
+  d.addEventListener("input",function(e){if(isMob()&&e.target.matches&&e.target.matches(".vw.mv textarea"))grow(e.target)},true);
+  swipeNav(d,win,inFrame);
   if(inFrame)return;
-  /* tapping a tab in the bar hides the bar again */
-  ["tabDump","tabRR","tabLib"].forEach(function(id){var b=d.getElementById(id);if(b)b.addEventListener("click",function(){if(isMob())setTimeout(function(){document.body.classList.add("thide")},160)})});
+  ["tabDump","tabRR","tabLib"].forEach(function(id){var b=d.getElementById(id);if(b)b.addEventListener("click",function(){if(isMob())setTimeout(function(){document.body.classList.add("thide")},180)})});
 }
+function grow(t){if(!t||!t.isConnected)return;var y=t.closest(".exw"),s=y?y.scrollTop:0;t.style.height="auto";t.style.height=(t.scrollHeight+2)+"px";if(y)y.scrollTop=s}
+function growAll(){if(!isMob())return;document.querySelectorAll(".vw.mv textarea").forEach(function(t){if(Math.abs(t.scrollHeight-t.clientHeight)>2)grow(t)})}
 
-/* ---------- side panel as a slide-over drawer ---------- */
+/* ---------- side panel = slide-over drawer ---------- */
 function drawerOf(el){return el&&el.closest&&el.closest(".sw.au")}
 function openD(w,on){if(!w)return;var bk=w.querySelector(":scope>.mbk");if(!bk){bk=document.createElement("div");bk.className="mbk";w.appendChild(bk)}
   w.classList.remove("pin");w.classList.toggle("pk",!!on)}
+function anyDrawer(){return document.querySelector(".sw.au.pk:not([hidden])")}
 document.addEventListener("click",function(e){
   if(!isMob())return;var t=e.target;
   var sh=t.closest&&t.closest(".sw.au>.sh");
   if(sh){e.preventDefault();e.stopImmediatePropagation();var w=sh.parentNode;openD(w,!(w.classList.contains("pk")||w.classList.contains("pin")));return}
   var bk=t.closest&&t.closest(".mbk");
   if(bk){e.preventDefault();e.stopImmediatePropagation();openD(bk.parentNode,0);return}
-  /* opening an item from the drawer closes it, like a phone app */
   var r=t.closest&&t.closest(".sw.au .sd .sr");
-  if(r&&!(t.closest(".cv")&&t.closest(".cv").innerHTML)&&!t.closest(".st")&&!t.closest("input")){var w2=drawerOf(r);setTimeout(function(){if(w2&&!w2.querySelector(".sd .sn"))openD(w2,0)},260)}
+  if(r&&!(t.closest(".cv")&&t.closest(".cv").innerHTML)&&!t.closest(".st")&&!t.closest("input")){var w2=drawerOf(r);setTimeout(function(){if(w2&&!w2.querySelector(".sd .sn"))openD(w2,0)},240)}
 },true);
-/* swipe from the left edge opens, swipe left closes */
-(function(){var S=null;
-  document.addEventListener("touchstart",function(e){if(!isMob()||e.touches.length!==1){S=null;return}var t=e.touches[0],w=drawerOf(e.target);if(!w){S=null;return}
-    var r=w.getBoundingClientRect(),open=w.classList.contains("pk")||w.classList.contains("pin");
-    if(open||t.clientX-r.left<22)S={w:w,x:t.clientX,y:t.clientY,open:open};else S=null},{passive:true,capture:true});
-  document.addEventListener("touchend",function(e){if(!S)return;var t=e.changedTouches[0],dx=t.clientX-S.x,dy=t.clientY-S.y;
-    if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.4){if(!S.open&&dx>0)openD(S.w,1);else if(S.open&&dx<0)openD(S.w,0)}S=null},{passive:true,capture:true});
-})();
-/* panels pinned on a computer open as a drawer here, never squeezing the content */
 function unpin(){if(!isMob())return;document.querySelectorAll(".sw.au.pin").forEach(function(w){openD(w,0)})}
 
-/* ---------- mind maps: pinch to zoom, two fingers to move, double tap a box to open it ---------- */
+/* ---------- back / forward ---------- */
+function vis(el){return el&&el.offsetParent!==null}
+function curTab(){try{return TAB}catch(e){return ""}}
+function curEx(){try{var t=curTab();if(t==="dump")return EX.dy;if(t==="rr"){var f=document.getElementById("fdWrap");return f&&f.classList.contains("open")?EX.fd:EX.rr}}catch(e){}return null}
+function libWin(){var f=document.getElementById("libFrame");try{return f&&f.contentWindow}catch(e){return null}}
+function goBack(){
+  var x;
+  if((x=document.querySelector(".mbx"))&&vis(x)){x.click();return 1}
+  if((x=document.getElementById("fvOv"))&&x.classList.contains("on")){document.getElementById("fvX").click();return 1}
+  if((x=anyDrawer())){openD(x,0);return 1}
+  var mv=["mmView","dmView","plView"].map(function(i){return document.getElementById(i)}).filter(function(v){return v&&!v.hidden&&vis(v)})[0];
+  if(mv){var p=mv.closest(".panel")||document,b=p.querySelector(".phm");if(b){b.click();return 1}}
+  var t=curTab(),E=curEx();
+  if(E&&E.hx>0){E.bk();return 1}
+  if(t==="rr"&&(x=document.getElementById("fdWrap"))&&x.classList.contains("open")){document.getElementById("fdHead").click();return 1}
+  if(t==="lib"){var w=libWin();try{if(w&&w.document.getElementById("viewViewport").classList.contains("show-prompt")){w.showView("index");return 1}}catch(e){}}
+  return 0;
+}
+function goFwd(){
+  var t=curTab(),E=curEx();
+  if(E&&E.hx<E.H.length-1){E.fw();return 1}
+  if(t==="lib"){var w=libWin();try{if(w&&!w.document.getElementById("viewViewport").classList.contains("show-prompt")){w.showView("prompt");return 1}}catch(e){}}
+  return 0;
+}
+window.__mobBack=goBack;window.__mobFwd=goFwd;
+/* the floating arrow that follows the thumb, like Android's back gesture */
+var IND=null;
+function ind(){if(IND)return IND;IND=document.createElement("div");IND.id="mobNav";IND.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>';document.body.appendChild(IND);return IND}
+function swipeNav(d,win,inFrame){
+  var S=null,TH=86;
+  function skip(t){if(!t||!t.closest)return 1;
+    if(t.closest("input,textarea,select,[contenteditable=true],#mmCv,#dmCv,#plCv,.tg,#mmTool,#dmTool,#plTool,#edPanel,#edBar,#edTb,.sd,#trPanel,input[type=range]"))return 1;
+    if(document.body.classList.contains("ed"))return 1;
+    for(var e=t;e&&e!==d.body;e=e.parentElement){if(e.scrollWidth>e.clientWidth+4){var o=win.getComputedStyle(e).overflowX;if(o==="auto"||o==="scroll")return 1}}return 0}
+  d.addEventListener("touchstart",function(e){
+    if(!isMob()||e.touches.length!==1){S=null;return}var p=e.touches[0],W=win.innerWidth;
+    var dr=drawerOf(e.target);if(dr&&(dr.classList.contains("pk"))){S={dr:dr,x:p.clientX,y:p.clientY};return}
+    if(p.clientX<EDGE||p.clientX>W-EDGE||skip(e.target)){S=null;return}
+    var off=inFrame?(document.getElementById("libFrame").getBoundingClientRect()):{left:0,top:0};
+    S={x:p.clientX,y:p.clientY,t:Date.now(),ox:off.left,oy:off.top,lock:0};
+  },{passive:true,capture:true});
+  d.addEventListener("touchmove",function(e){if(!S||S.dr)return;var p=e.touches[0],dx=p.clientX-S.x,dy=p.clientY-S.y;
+    if(!S.lock){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){S=null;return}if(Math.abs(dx)>14&&Math.abs(dx)>Math.abs(dy)*1.3)S.lock=1;else return}
+    var I=ind(),k=Math.min(1,Math.abs(dx)/TH),back=dx>0;I.className=back?"l":"r";
+    I.style.top=(S.oy+S.y-22)+"px";I.style.opacity=String(.25+.75*k);
+    I.style.transform="translateX("+(back?1:-1)*Math.min(Math.abs(dx)*.55,64)+"px) scale("+(.7+.3*k)+")";I.classList.toggle("go",k>=1);
+  },{passive:true,capture:true});
+  d.addEventListener("touchend",function(e){if(!S)return;var p=e.changedTouches[0],dx=p.clientX-S.x,dy=p.clientY-S.y,s=S;S=null;
+    if(s.dr){if(dx<-55&&Math.abs(dx)>Math.abs(dy)*1.4)openD(s.dr,0);return}
+    if(IND){IND.style.transform="";IND.style.opacity="0";IND.classList.remove("go")}
+    if(!s.lock||Math.abs(dx)<TH||Math.abs(dx)<Math.abs(dy)*1.5)return;
+    var ok=dx>0?goBack():goFwd();
+    if(ok){try{win.navigator.vibrate&&win.navigator.vibrate(8)}catch(x){}}
+  },{passive:true,capture:true});
+  d.addEventListener("touchcancel",function(){S=null;if(IND){IND.style.opacity="0";IND.style.transform=""}},{passive:true,capture:true});
+}
+/* website: the phone's own back gesture steps back inside the dashboard first */
+(function(){var h=location.hostname;if(!/github\.io$|^localhost$/.test(h))return;
+  try{history.replaceState({rr:0},"");history.pushState({rr:1},"")}catch(e){return}
+  window.addEventListener("popstate",function(){if(!isMob())return;if(goBack()){try{history.pushState({rr:1},"")}catch(e){}}else{try{history.back()}catch(e){}}});
+})();
+
+/* ---------- mind maps: pinch zoom, two-finger move, double tap opens ---------- */
 function wireMap(cid){
   var cv=document.getElementById(cid);if(!cv||cv.__mob)return;cv.__mob=1;
-  var SYN=0,view=cv.closest("#mmView,#dmView,#plView"),P={},last=null,tap={t:0,i:null};
+  if(navigator.maxTouchPoints>0){cv.style.touchAction="none";cv.parentNode.style.touchAction="none"}
+  var SYN=0,view=cv.closest("#mmView,#dmView,#plView"),P={},last=null,tap={t:0,i:null},host=cv.parentNode,TD=null;
   function pts(){return Object.keys(P).map(function(k){return P[k]})}
-  function wheel(o){var e=new WheelEvent("wheel",Object.assign({bubbles:true,cancelable:true,deltaMode:0},o));cv.dispatchEvent(e)}
+  function wheel(o){cv.dispatchEvent(new WheelEvent("wheel",Object.assign({bubbles:true,cancelable:true,deltaMode:0},o)))}
   function geo(){var a=pts();if(a.length<2)return null;var p=a[0],q=a[1];return{x:(p.x+q.x)/2,y:(p.y+q.y)/2,d:Math.max(1,Math.hypot(p.x-q.x,p.y-q.y))}}
-  var host=cv.parentNode;
   host.addEventListener("pointerdown",function(e){if(e.pointerType!=="touch")return;P[e.pointerId]={x:e.clientX,y:e.clientY};
-    if(pts().length>=2){e.stopPropagation();last=geo();
-      /* end the one-finger action that had started */
+    if(e.isPrimary){var el=e.target.closest&&e.target.closest("[data-i]");TD=el?{el:el,x:e.clientX,y:e.clientY}:null}
+    if(pts().length>=2){e.stopPropagation();last=geo();TD=null;tap.i=null;
       var first=Object.keys(P).filter(function(k){return +k!==e.pointerId})[0];
       SYN=1;try{var f=P[first],o={bubbles:true,pointerId:+first,pointerType:"touch",button:0};
         cv.dispatchEvent(new PointerEvent("pointermove",Object.assign({clientX:f.x+8,clientY:f.y},o)));
         cv.dispatchEvent(new PointerEvent("pointermove",Object.assign({clientX:f.x,clientY:f.y},o)));
         cv.dispatchEvent(new PointerEvent("pointerup",Object.assign({clientX:f.x,clientY:f.y},o)))}catch(x){}SYN=0;
     }},true);
-  host.addEventListener("pointermove",function(e){if(SYN)return;if(e.pointerType!=="touch"||!P[e.pointerId])return;P[e.pointerId]={x:e.clientX,y:e.clientY};
+  host.addEventListener("pointermove",function(e){if(SYN||e.pointerType!=="touch"||!P[e.pointerId])return;P[e.pointerId]={x:e.clientX,y:e.clientY};
     if(pts().length>=2){e.stopPropagation();e.preventDefault();var g=geo();if(last&&g){
-      var r=g.d/last.d;if(Math.abs(r-1)>.002)wheel({ctrlKey:true,deltaY:-Math.log(r)/0.0045,clientX:g.x,clientY:g.y});
+      var r=g.d/last.d;if(Math.abs(r-1)>.001)wheel({ctrlKey:true,deltaY:-Math.log(r)/0.0045,clientX:g.x,clientY:g.y});
       var dx=g.x-last.x,dy=g.y-last.y;if(dx||dy)wheel({deltaX:-dx,deltaY:-dy,clientX:g.x,clientY:g.y});
     }last=g}},true);
-  function up(e){if(SYN||e.pointerType!=="touch"||!P[e.pointerId])return;var multi=pts().length>=2;delete P[e.pointerId];if(multi){e.stopPropagation();last=geo()}}
+  function up(e){if(SYN||e.pointerType!=="touch"||!P[e.pointerId])return;var multi=pts().length>=2;delete P[e.pointerId];if(multi){e.stopPropagation();last=geo();TD=null}
+    else if(e.type==="pointerup"&&TD&&!(view&&view.classList.contains("edit"))){var d=TD;TD=null;
+      if(Math.abs(e.clientX-d.x)+Math.abs(e.clientY-d.y)>12){tap.i=null;return}
+      var id=d.el.getAttribute("data-i"),n=Date.now();
+      if(tap.i===id&&n-tap.t<400){tap.i=null;var el=d.el;
+        setTimeout(function(){var SPC=Element.prototype.setPointerCapture;Element.prototype.setPointerCapture=function(i){try{SPC.call(this,i)}catch(z){}};
+          for(var k=0;k<2;k++){try{el.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,cancelable:true,button:1,buttons:4,pointerId:9000+k,pointerType:"mouse",clientX:d.x,clientY:d.y}));cv.dispatchEvent(new PointerEvent("pointerup",{bubbles:true,button:1,pointerId:9000+k,pointerType:"mouse",clientX:d.x,clientY:d.y}))}catch(x){}}
+          Element.prototype.setPointerCapture=SPC},0);
+      }else{tap.i=id;tap.t=n}
+    }}
   host.addEventListener("pointerup",up,true);host.addEventListener("pointercancel",up,true);
-  /* double tap a box (view mode) = the computer's double middle-click: open its content */
-  var TD=null;
-  host.addEventListener("pointerdown",function(e){if(e.pointerType!=="touch"||!e.isPrimary)return;var el=e.target.closest&&e.target.closest("[data-i]");TD=el?{el:el,x:e.clientX,y:e.clientY}:null},true);
-  host.addEventListener("pointerup",function(e){
-    if(SYN||e.pointerType!=="touch"||!TD||(view&&view.classList.contains("edit")))return;
-    var d=TD;TD=null;if(Math.abs(e.clientX-d.x)+Math.abs(e.clientY-d.y)>12){tap.i=null;return}
-    var id=d.el.getAttribute("data-i"),n=Date.now();
-    if(tap.i===id&&n-tap.t<400){tap.i=null;var el=d.el;
-      setTimeout(function(){var SPC=Element.prototype.setPointerCapture;Element.prototype.setPointerCapture=function(i){try{SPC.call(this,i)}catch(z){}};for(var k=0;k<2;k++){try{el.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,cancelable:true,button:1,buttons:4,pointerId:9000+k,pointerType:"mouse",clientX:d.x,clientY:d.y}));cv.dispatchEvent(new PointerEvent("pointerup",{bubbles:true,button:1,pointerId:9000+k,pointerType:"mouse",clientX:d.x,clientY:d.y}))}catch(x){}}Element.prototype.setPointerCapture=SPC},0);
-    }else{tap.i=id;tap.t=n}
-  },true);
+  /* plain touch events as a backup, for phones that hand pinches to the page */
+  var T0=null;
+  host.addEventListener("touchstart",function(e){if(e.touches.length===2){if(e.cancelable)e.preventDefault();var a=e.touches[0],b=e.touches[1];T0={x:(a.clientX+b.clientX)/2,y:(a.clientY+b.clientY)/2,d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)}}},{passive:false});
+  host.addEventListener("touchmove",function(e){if(e.touches.length<2||!T0)return;if(e.cancelable)e.preventDefault();if(pts().length>=2)return;
+    var a=e.touches[0],b=e.touches[1],g={x:(a.clientX+b.clientX)/2,y:(a.clientY+b.clientY)/2,d:Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY))};
+    var r=g.d/T0.d;if(Math.abs(r-1)>.001)wheel({ctrlKey:true,deltaY:-Math.log(r)/0.0045,clientX:g.x,clientY:g.y});
+    if(g.x-T0.x||g.y-T0.y)wheel({deltaX:-(g.x-T0.x),deltaY:-(g.y-T0.y),clientX:g.x,clientY:g.y});T0=g},{passive:false});
+  host.addEventListener("touchend",function(e){if(e.touches.length<2)T0=null},{passive:true});
 }
 
-/* ---------- Prompt Library frame gets the same phone behaviour ---------- */
-var FCSS='@media (hover:none) and (pointer:coarse){html,body{-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-text-size-adjust:100%}'+
- 'input:not([type=checkbox]):not([type=radio]),select,textarea{font-size:16px!important}'+
- 'header{padding-left:100px!important;padding-right:100px!important}header h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px!important}'+
- 'button,summary,.prompt-row,.entry-btn{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}'+
- '.view-track>.view-panel{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}.custom-scroll{display:none!important}.view-track>.view-panel{padding-right:12px!important}'+
- '.drag-handle{padding:8px 6px;font-size:22px}}';
+/* ---------- Prompt Library frame ---------- */
 function wireFrame(){var f=document.getElementById("libFrame");if(!f)return;
-  function go(){try{var d=f.contentDocument;if(!d||!d.head)return;if(!d.getElementById("mobFrameCss")){var s=d.createElement("style");s.id="mobFrameCss";s.textContent=FCSS;d.head.appendChild(s)}wire(d,1)}catch(x){}}
+  function go(){try{var d=f.contentDocument;if(!d||!d.head)return;if(isMob())d.documentElement.classList.add("mob");
+    if(!d.getElementById("mobFrameCss")){var s=d.createElement("style");s.id="mobFrameCss";s.textContent=window.__MOB_FCSS||"";d.head.appendChild(s)}wire(d,1)}catch(x){}}
   if(!f.__mob){f.__mob=1;f.addEventListener("load",go)}go()}
 
-
-/* design Edit mode on a phone: start with the sheet closed so the page is visible */
-(function(){if(typeof window.edToggle!=="function"||window.edToggle.__mob)return;var o=window.edToggle;
-  window.edToggle=function(on){var r=o.apply(this,arguments);if(on&&isMob()&&typeof edPo==="function")try{edPo(0)}catch(x){}return r};window.edToggle.__mob=1})();
-
-/* keep every pop-up menu fully on screen */
+/* ---------- menus stay on screen ---------- */
 var MENUS=["menu","trMenu","dlMenu","tlMenu","mmMenu","dmMenu","plMenu","mmCtx","dmCtx","plCtx","mmShpM","dmShpM","plShpM"];
 function clamp(el){if(!isMob()||!el||!el.isConnected)return;var cs=getComputedStyle(el);if(cs.position!=="fixed"&&cs.position!=="absolute")return;var r=el.getBoundingClientRect();if(!r.width||!r.height)return;
   var W=innerWidth,H=innerHeight,dx=0,dy=0;if(r.right>W-6)dx=W-6-r.right;if(r.left+dx<6)dx=6-r.left;if(r.bottom>H-6)dy=H-6-r.bottom;if(r.top+dy<6)dy=6-r.top;
   if(Math.abs(dx)>.5)el.style.left=(parseFloat(cs.left)||0)+dx+"px";if(Math.abs(dy)>.5)el.style.top=(parseFloat(cs.top)||0)+dy+"px"}
 function wireMenus(){MENUS.forEach(function(id){var el=document.getElementById(id);if(!el||el.__mobc)return;el.__mobc=1;
   new MutationObserver(function(){requestAnimationFrame(function(){clamp(el)})}).observe(el,{attributes:true,attributeFilter:["class","style"]})})}
-function all(){wireMenus();wire(document,0);["mmCv","dmCv","plCv"].forEach(wireMap);wireFrame();unpin()}
-all();
-new MutationObserver(function(){clearTimeout(all._t);all._t=setTimeout(all,120)}).observe(document.body,{childList:true,subtree:true});
-})();</script>
 
+/* ---------- design Edit mode starts with its sheet closed ---------- */
+(function(){if(typeof window.edToggle!=="function"||window.edToggle.__mob)return;var o=window.edToggle;
+  window.edToggle=function(on){var r=o.apply(this,arguments);if(on&&isMob()&&typeof edPo==="function")try{edPo(0)}catch(x){}return r};window.edToggle.__mob=1})();
+
+function wireEx(){try{["dy","rr","fd"].forEach(function(k){var E=EX[k];if(!E||E.__mob)return;E.__mob=1;var o=E.onGo,last=E.cwd;E.onGo=function(id){if(o)o.apply(this,arguments);if(isMob()&&id!==last&&E.host)E.host.scrollTop=0;last=id}})}catch(e){}}
+function all(){wireMenus();wireEx();wire(document,0);["mmCv","dmCv","plCv"].forEach(wireMap);wireFrame();unpin();growAll()}
+all();
+var mt=0;new MutationObserver(function(){if(mt)return;mt=requestAnimationFrame(function(){mt=0;all()})}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body>
 </html>
