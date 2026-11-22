@@ -23,6 +23,18 @@ box-shadow:-22px 0 40px -2px rgba(0,0,0,.9),22px 0 40px -2px rgba(0,0,0,.9),0 0 
 <body><iframe id="rrApp" src="app.html" title="RR Engineer" allow="clipboard-read; clipboard-write; fullscreen"></iframe></body></html>
 """
 (here / "index.html").write_text(shell, encoding="utf-8")
+# AK = the Prompt Library tab shown alone (same page, other tabs and the top bar hidden)
+AKCSS = ('<style id="akOnly">#top,#pDump,#pRR,#tabLock,#tlMenu{display:none!important}'
+         '#libPanel.lk,.panel.lk{filter:none!important}</style>\n')
+def akify(x, title="AK Prompt Library"):
+    x = x.replace('<head>\n', '<head>\n' + AKCSS, 1)
+    x = x.replace('<title>RR Engineer</title>', '<title>' + title + '</title>', 1)
+    i = x.rfind('</body>')
+    return x[:i] + '<script>try{setTab("lib")}catch(e){}</script>\n' + x[i:]
+(here / "akapp.html").write_text(akify(app), encoding="utf-8")
+(here / "ak.html").write_text(shell.replace('src="app.html"', 'src="akapp.html"').replace('<title>RR Engineer</title>', '<title>AK Prompt Library</title>'), encoding="utf-8")
+if len(sys.argv) > 3:
+    pathlib.Path(sys.argv[3]).write_text(akify(src), encoding="utf-8")
 if len(sys.argv) > 2:
     shutil.copyfile(sys.argv[2], here / "masterbook.html")
 print("built app.html", len(app), "bytes + index.html shell")
