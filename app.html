@@ -3042,23 +3042,65 @@ function addMap(t,mk){mk=(mk==="dm"||mk==="pl")?mk:"rr";var G={rr:"rr",dm:"dy",p
 function tabOf(el){var d=el.ownerDocument;if(d!==document)return "Prompt Library";var p=el.closest&&el.closest("#pDump,#pRR,#libPanel");return p?(p.id==="pDump"?"Dumpyard":p.id==="pRR"?"RR Engineer":"Prompt Library"):"Dashboard"}
 function whatIs(e){
   var el=e.target;if(!el||!el.closest)return null;var d=el.ownerDocument;
-  if(el.closest(".phtr,#trPanel"))return null;
+  if(el.closest(".phtr,#trPanel,#trCp"))return null;var CTL="button,a,input,textarea,select,label,[role=button],[contenteditable=true]";
   if(d===document){
     var cv=el.closest("#mmCv,#dmCv,#plCv");
     if(cv){var n=el.closest("[data-i]"),mk0=cv.id.slice(0,2);return n?{map:n.getAttribute("data-i"),mk:mk0}:{map:null,mk:mk0}}
     var it=el.closest("[data-i]");if(it&&window.__rrInfo&&window.__rrInfo(it.getAttribute("data-i")))return{ids:[it.getAttribute("data-i")]};
-    var h=el.closest(".phd");if(h){var tb=tabOf(h);return{one:{src:"tab",tab:tb,kind:"Whole tab",name:tb+" (whole tab)",path:""}}}
+    var h=el.closest(".phd");if(h&&!el.closest(CTL)){var tb=tabOf(h);return{one:{src:"tab",tab:tb,kind:"Whole tab",name:tb+" (whole tab)",path:""}}}
     var tt=el.closest("#top .tab");if(tt){var tn=tt.textContent.trim();return{one:{src:"tab",tab:tn,kind:"Whole tab",name:tn+" (whole tab)",path:""}}}
   }else{
     var row=el.closest(".prompt-row");
     if(row){var ti=row.querySelector(".entry-title"),mt=row.querySelector(".entry-meta");var dt=row.closest("details"),sm0=dt&&dt.querySelector("summary");var cat=sm0?sm0.textContent.replace(/\d+\s*$/,"").trim():"";
       return{one:{src:"prompt",tab:"Prompt Library",kind:"Prompt",name:(ti&&ti.textContent||"").trim(),path:cat||((mt&&mt.textContent)||"").trim()}}}
     var sm=el.closest("summary");if(sm)return{one:{src:"prompt",tab:"Prompt Library",kind:"Category",name:sm.textContent.replace(/\d+\s*$/,"").trim(),path:""}};
-    var hd=el.closest("header");if(hd)return{one:{src:"tab",tab:"Prompt Library",kind:"Whole tab",name:"Prompt Library (whole tab)",path:""}};
+    var hd=el.closest("header");if(hd&&!el.closest(CTL))return{one:{src:"tab",tab:"Prompt Library",kind:"Whole tab",name:"Prompt Library (whole tab)",path:""}};
     var vp=el.closest(".view-viewport");if(vp){var ar=d.querySelector(".prompt-row.active"),at=ar&&ar.querySelector(".entry-title")||d.querySelector(".entry-big,.view-viewport h1,.view-viewport h2,#promptTitle,[class*=title]"),ac=ar&&ar.closest("details")&&ar.closest("details").querySelector("summary");return{one:{src:"prompt",tab:"Prompt Library",kind:"Open prompt",name:(at&&at.textContent||"Open prompt").trim(),path:ac?ac.textContent.replace(/\d+\s*$/,"").trim():""}}}
   }
-  var tx=(el.innerText||el.textContent||"").trim().replace(/\s+/g," ").slice(0,160);
-  return tx?{one:{src:"other",tab:tabOf(el),kind:"Selection",name:tx,path:""}}:null}
+  return describe(el,null)}
+/* exact description of any clicked spot: what it is, its label, where it sits, and a locator */
+function clean(s,n){return String(s||"").replace(/\s+/g," ").trim().slice(0,n||90)}
+function kindOf(t){var g=t.tagName,ty=(t.getAttribute("type")||"").toLowerCase();
+  if(g==="BUTTON"||t.getAttribute("role")==="button")return"Button";if(g==="A")return"Link";
+  if(g==="INPUT")return ty==="checkbox"?"Checkbox":ty==="radio"?"Option":ty==="range"?"Slider":"Text box";
+  if(g==="TEXTAREA")return"Text area";if(g==="SELECT")return"Drop-down";if(g==="IMG")return"Image";if(g==="CANVAS")return"Picture";
+  if(/^H[1-6]$/.test(g))return"Heading";if(g==="SUMMARY")return"Section header";if(g==="LABEL")return"Label";if(g==="TD"||g==="TH")return"Table cell";
+  if(t.closest("svg"))return"Icon";return(t.children.length?"Area":"Text")}
+function labelOf(t){if((t.tagName==="TEXTAREA"||t.tagName==="INPUT")&&t.value&&!/checkbox|radio/i.test(t.type||""))return clean(t.value,60)+(t.value.length>60?"…":"");var v=t.getAttribute("aria-label")||t.getAttribute("title")||t.getAttribute("placeholder")||t.getAttribute("alt")||"";
+  if(!v&&t.tagName==="SELECT"&&t.selectedOptions&&t.selectedOptions[0])v=t.selectedOptions[0].textContent;
+  if(!v)v=t.innerText||t.textContent||"";if(!v&&t.closest("svg")){var b=t.closest("svg").parentElement;v=b&&(b.getAttribute("aria-label")||b.getAttribute("title"))||""}
+  return clean(v,80)}
+function crumb(x){var b=x&&x.querySelector(".bc");if(!b)return"";var p=[].map.call(b.children,function(c){return clean(c.innerText||c.textContent,40)}).filter(Boolean);return p.length?p.join(" › "):clean(b.innerText,90)}
+function placeOf(el){var out=[],seen={},inItem=0;function push(s){s=clean(s,100);if(s&&!seen[s]){seen[s]=1;out.unshift(s)}}
+  for(var n=el;n&&n.nodeType===1;n=n.parentElement){var id=n.id||"",c=n.classList;
+    if(id==="fvOv"){push("File preview: "+clean((document.getElementById("fvNm")||{}).textContent,60));break}
+    if(id==="mbOv"){push("AI Master Book");continue}
+    if(c.contains("vw")&&c.contains("mv")){var ex=n.closest(".exw");push("Open item: "+(crumb(ex)||"content"));inItem=1;continue}
+    if(c.contains("exw")){if(inItem)continue;var cb=crumb(n);push(cb?"Folder view: "+cb:"Folder view");continue}
+    if(c.contains("sd")){push("Side panel");continue}
+    if(c.contains("phd")||n.tagName==="HEADER"){push("Heading bar");continue}
+    if(id==="top"){push("Top tab bar");continue}
+    if(/^(mm|dm|pl)View$/.test(id)){push("Mind map");continue}
+    if(id==="fdWrap"||id==="fdBox"){push("Foundation");continue}
+    if(id==="bkBox"||id==="bkWrap"){push("Backend");continue}
+    if(c.contains("fr")&&n.querySelector(".nm1")){push("File: "+clean(n.querySelector(".nm1").textContent,60));continue}
+    if(c.contains("fz")){push("Files");continue}
+    if(id&&/menu|Menu|Panel|pop|Pop|dlg|Dlg/.test(id)){push("Pop-up: "+id);continue}
+    if(n.tagName==="DETAILS"){var sm=n.querySelector("summary");if(sm)push(clean(sm.innerText||sm.textContent,60).replace(/\s*\d+$/,""))}
+  }
+  return out.join(" › ")}
+function locOf(el){var parts=[],n=el;for(var i=0;n&&n.nodeType===1&&i<5;i++,n=n.parentElement){var s=n.tagName.toLowerCase();
+    if(n.id){parts.unshift("#"+n.id);break}var cl=[].slice.call(n.classList).filter(function(x){return!/^(on|pk|pin|hov|sel)$/.test(x)}).slice(0,2);if(cl.length)s+="."+cl.join(".");parts.unshift(s)}
+  return parts.join(" > ")}
+function describe(el,ctx){
+  var t=el.closest("button,a,input,textarea,select,label,summary,[role=button],[title],[aria-label],img,canvas,h1,h2,h3,h4,h5,h6,td,th,li,p")||el;
+  var sel="";try{if(t.tagName==="TEXTAREA"||t.tagName==="INPUT"){if(t.selectionEnd>t.selectionStart)sel=t.value.slice(t.selectionStart,t.selectionEnd)}else{var ws=(t.ownerDocument.defaultView||window).getSelection();if(ws&&!ws.isCollapsed&&t.contains(ws.anchorNode))sel=ws.toString()}}catch(z){}
+  var lab=labelOf(t),k=kindOf(t),pl=placeOf(el),where=(ctx?ctx+(pl?" › ":""):"")+pl,fe=null;try{fe=el.ownerDocument.defaultView.frameElement}catch(z){}var tb=fe?tabOf(fe):tabOf(el);
+  if(k==="Area"&&lab.length>60)lab=lab.slice(0,60)+"…";
+  return{one:{src:"ui",tab:tb,kind:k,name:(lab||k)+(sel?" — selected: “"+clean(sel,200)+"”":""),path:where,loc:locOf(t)}}}
+window.__trWireAlt=function(d,ctx){if(!d||d.__tra)return;d.__tra=1;
+  d.addEventListener("click",function(e){if(!e.altKey)return;e.preventDefault();e.stopPropagation();act(describe(e.target,ctx))},true);
+  d.addEventListener("mousedown",function(e){if(e.altKey)e.stopPropagation()},true)};
 function act(w){if(!w)return;if(w.ids)addIds(w.ids);else if(w.one)add(w.one);else if("map" in w){addMap(w.map?{id:w.map}:null,w.mk)}}
 /* ---- panel open/close ---- */
 function frameK(){var f=$("libFrame").getBoundingClientRect();return{x:f.left,y:f.top,k:f.width/($("libFrame").offsetWidth||1)}}
@@ -3105,7 +3147,7 @@ $("trList").addEventListener("input",function(e){var n=e.target.getAttribute("da
 $("trList").addEventListener("click",function(e){var x=e.target.closest("[data-x]");if(!x)return;TR.splice(+x.getAttribute("data-x"),1);persist()});
 $("trClear").onclick=function(){TR=TR.filter(function(t){return gOf(t)!==CUR});persist()};
 /* ---- send to Claude: one item, or selected items (copy window; a page cannot post into the chat itself) ---- */
-function line(t,n){var s=(n?n+". ":"")+"["+(t.tab||NAMES[gOf(t)]||"")+"] "+(t.name||"(untitled)")+(t.kind?" — "+t.kind:"");if(t.path)s+="\n   Path: "+t.path;if(t.id)s+="\n   ID: "+t.id;if(t.note)s+="\n   Note: "+t.note;return s}
+function line(t,n){var s=(n?n+". ":"")+"["+(t.tab||NAMES[gOf(t)]||"")+"] "+(t.name||"(untitled)")+(t.kind?" — "+t.kind:"");if(t.path)s+="\n   Path: "+t.path;if(t.id)s+="\n   ID: "+t.id;if(t.loc)s+="\n   Element: "+t.loc;if(t.note)s+="\n   Note: "+t.note;return s}
 function pack(list){return "Discuss with Claude — RR Engineer dashboard ("+list.length+" item"+(list.length>1?"s":"")+")\n\n"+list.map(function(t,k){return line(t,list.length>1?k+1:0)}).join("\n\n")}
 var CP=document.createElement("div");CP.id="trCp";CP.setAttribute("role","dialog");CP.setAttribute("aria-modal","true");
 CP.innerHTML='<div class="c"><div class="h"><b>Send to Claude</b><button type="button" class="x" aria-label="Close" title="Close (Esc)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="tw"><textarea readonly spellcheck="false"></textarea><button type="button" class="ci" title="Copy" aria-label="Copy"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></div><p>Copy, then paste it in the chat (Ctrl+V).</p><button type="button" class="go"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copy</span></button></div>';
@@ -5138,7 +5180,7 @@ function shut(){if(ov)ov.hidden=true}
 window.__openMB=function(link){var P=document.getElementById("pDump");if(!P)return;url=link||url;
 if(!ov){ov=document.createElement("div");ov.id="mbOv";ov.innerHTML='<div class="mbh"><span>AI Master Book</span><button type="button" class="mbx" aria-label="Close Master Book" title="Close (Esc)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><iframe id="mbFr" title="AI Master Book"></iframe><div class="mbm">Loading the Master Book…</div>';P.appendChild(ov);fr=ov.querySelector("#mbFr");ms=ov.querySelector(".mbm");ov.querySelector(".mbx").onclick=shut}
 ov.hidden=false;
-if(!ok){ms.hidden=false;fetch("masterbook.html",{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){fr.srcdoc=t;ok=1;ms.hidden=true}).catch(function(){ms.innerHTML='Could not load it here. <a href="'+url+'" target="_blank" rel="noopener">Open the Master Book in a new tab</a>'})}};
+if(!ok){ms.hidden=false;fetch("masterbook.html",{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){fr.onload=function(){try{window.__trWireAlt&&window.__trWireAlt(fr.contentDocument,"AI Master Book")}catch(z){}};fr.srcdoc=t;ok=1;ms.hidden=true}).catch(function(){ms.innerHTML='Could not load it here. <a href="'+url+'" target="_blank" rel="noopener">Open the Master Book in a new tab</a>'})}};
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ov&&!ov.hidden)shut()},true)})();</script>
 <style id="fvCss">
 #fvOv{position:fixed;inset:0;z-index:3000;display:flex;visibility:hidden;opacity:0;pointer-events:none;align-items:center;justify-content:center;background:rgba(16,36,59,.62);transition:opacity .16s ease,visibility 0s linear .16s}
