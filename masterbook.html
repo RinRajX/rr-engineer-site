@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The AI Master Book</title>
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--mut:#666;--card:#f6f6f4;--line:#e2e2de;--acc:#e8590c;--accfg:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#161616;--fg:#f2f2f0;--mut:#a5a5a0;--card:#222;--line:#333;--acc:#f76707;--accfg:#fff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:820px;margin:0 auto;padding:32px 16px 64px}
+h1{font-size:28px;margin:0 0 6px}
+.sub{color:var(--mut);margin:0 0 22px}
+details{border-radius:12px}
+details>summary{list-style:none;cursor:pointer;user-select:none}
+details>summary::-webkit-details-marker{display:none}
+.stage{background:var(--card);border:1px solid var(--line);margin-bottom:10px;overflow:hidden}
+.stage>summary{display:flex;align-items:center;gap:12px;padding:14px 16px;font-weight:600;font-size:17px}
+.stage>summary::after{content:"▾";margin-left:auto;color:var(--mut);transition:transform .2s}
+.stage[open]>summary::after{transform:rotate(180deg)}
+.stage[open]>summary{border-bottom:1px solid var(--line)}
+.sn{background:var(--acc);color:var(--accfg);min-width:34px;height:34px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+.sbody{padding:10px 12px 12px}
+.part{background:var(--bg);border:1px solid var(--line);margin-top:8px}
+.part>summary{display:flex;align-items:center;gap:10px;padding:11px 14px;font-weight:600;font-size:15px}
+.part>summary::after{content:"▾";margin-left:auto;color:var(--mut);transition:transform .2s}
+.part[open]>summary::after{transform:rotate(180deg)}
+.pn{border:2px solid var(--acc);color:var(--acc);width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+.pbody{padding:2px 16px 14px}
+.pbody h4{margin:14px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--acc)}
+.pbody ul{margin:4px 0;padding-left:20px}
+.pbody li{margin:4px 0}
+.pbody p{margin:6px 0}
+code{background:var(--card);padding:1px 5px;border-radius:4px;font-size:.9em}
+.pbody a{color:var(--acc);text-decoration:underline}
+.final{margin-top:24px;padding:16px;border-left:4px solid var(--acc);background:var(--card);border-radius:8px}
+.final h2{margin:0 0 6px;font-size:17px}
+.bar{display:flex;gap:8px;margin-bottom:14px}
+button{background:var(--acc);color:var(--accfg);border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer}
+button.ok{background:#2f9e44}
+</style></head><body><main>
+<h1>The AI Master Book</h1>
+<p class="sub">Open one stage at a time. Inside a stage, one part at a time.</p>
+<div class="final" style="margin:0 0 14px"><h2>Start here</h2><ol style="margin:4px 0;padding-left:20px"><li>Read Stages 1, 3, and 4 (Basics, Programming, Data).</li><li>Build the 50-record catalog from Stage 15, using Stage 11 (Building AI Applications).</li><li>Add Stages 8 and 17 (LLMs, Evaluation) for the next builds.</li><li>Add Stages 12 and 13 (Deployment, Responsible AI) when you release a product.</li><li>Use Stage 22 whenever you need to find tools.</li><li>Open the other stages only when a project needs them.</li></ol></div>
+<div class="bar"><button id="closeAll">Close all</button></div>
+<details class="stage"><summary><span class="sn">1</span><span class="st">Basics</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Core definitions</h4>
+<ul>
+<li><b>AI:</b> Machines doing tasks that normally need human thinking.</li>
+<li><b>Machine learning:</b> AI that learns patterns from data.</li>
+<li><b>Deep learning:</b> Machine learning with large multi-layer neural networks.</li>
+<li><b>Data, model, training, inference:</b> Examples, learned pattern, learning process, and using the model on new input.</li>
+</ul>
+<h4>Types of AI</h4>
+<ul>
+<li><b>Narrow, general, super AI:</b> One-task AI, human-level AI, and AI beyond humans. Only narrow AI exists today.</li>
+<li><b>Prediction, generation, decision-making:</b> Predict a result, create something new, or choose an action.</li>
+</ul>
+<h4>Key ideas</h4>
+<ul>
+<li><b>Generalization:</b> Working on examples the model never saw.</li>
+<li><b>Parameters vs hyperparameters:</b> The model learns parameters. You choose hyperparameters.</li>
+<li><b>GIGO (Garbage In, Garbage Out):</b> Bad data in, bad results out, however smart the model is.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Problem framing:</b> Define who needs help, what output they need, and how success is measured.</li>
+<li><b>Baselines:</b> Start with a simple rule or average, so you have something to beat.</li>
+<li><b>Prototype vs production:</b> A prototype tests an idea. Production must run reliably for users.</li>
+</ul>
+<h4>Define the product</h4>
+<ul>
+<li><b>Product definition:</b> Name the user, the decision they must make, their current workaround, and their constraints.</li>
+<li><b>Verifiable outcome:</b> Turn a wish like "find the best tool" into a result you can test.</li>
+<li><b>Required vs preferred:</b> A missing required feature fails a candidate. A preference only changes the ranking.</li>
+<li><b>Acceptance example:</b> Accept a tool when a source supports the feature. "Free to install" does not prove the feature is free. Excellent ratings do not fix a missing feature.</li>
+<li><b>Delegation:</b> AI can write most of the code. You still own the requirements, permissions, tests, and release decision.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Common mistake:</b> Starting with a complex model before a baseline.</li>
+<li><b>Check:</b> Can you explain the problem, the data, and the success measure in one paragraph?</li>
+<li><b>Uncertainty and abstention:</b> A good system admits when it is unsure.</li>
+<li><b>Practice:</b> Write ten real user questions. Answer three by hand with evidence. Include one that should end in "insufficient evidence." Keep them as your first evaluation set.</li>
+<li><b>Progress rule:</b> Move on only when you can show the result, explain a failure, and undo the change.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">2</span><span class="st">Math</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Linear algebra</h4>
+<ul>
+<li><b>Vectors and matrices:</b> Data and weights are stored as numbers in lists and tables.</li>
+<li><b>Dot product and cosine similarity:</b> Measure how strongly two vectors match.</li>
+<li><b>Eigenvectors and SVD:</b> Find the main patterns in a matrix.</li>
+<li><b>Matrix operations:</b> Transpose, inverse, rank, and determinant describe how a matrix transforms data.</li>
+</ul>
+<h4>Probability and statistics</h4>
+<ul>
+<li><b>Probability and Bayes' rule:</b> Measure likelihood and update beliefs with evidence.</li>
+<li><b>Distributions and sampling:</b> Describe outcomes and draw examples from them.</li>
+<li><b>Key distributions:</b> Normal (bell curve), Bernoulli and binomial (yes/no counts), Poisson (event counts), uniform (all equal).</li>
+<li><b>Expectation, variance, covariance:</b> Average, spread, and how values move together.</li>
+<li><b>Confidence intervals and hypothesis tests:</b> Check whether a result is real or chance.</li>
+</ul>
+<h4>Information and calculus</h4>
+<ul>
+<li><b>Entropy, cross-entropy, KL divergence:</b> Measure uncertainty and how different two distributions are.</li>
+<li><b>Derivatives, chain rule, gradients:</b> Show how a small input change affects the output.</li>
+<li><b>Integrals:</b> Add up many small pieces, used for areas under curves and for probabilities.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Maximum likelihood and MAP:</b> Choose settings that best explain the data.</li>
+<li><b>Bootstrap:</b> Resample data to see how much a result varies.</li>
+<li><b>Optimization:</b> Find the best solution within limits.</li>
+<li><b>Numerical stability:</b> Keep calculations reliable with very large or small numbers.</li>
+<li><b>Tools:</b> NumPy and SciPy for math, Jupyter for experiments.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Implement a dot product, a gradient, and a softmax by hand in Python.</li>
+<li><b>Common mistake:</b> Trusting a result without checking its uncertainty.</li>
+<li><b>Check:</b> Can you explain what a gradient tells the model?</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">3</span><span class="st">Programming and File Formats</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Core skills</h4>
+<ul>
+<li><b>Python:</b> The main language for AI.</li>
+<li><b>Shell and command line:</b> Run programs, move files, and automate tasks.</li>
+<li><b>Data structures and runtime cost:</b> Choose efficient storage and estimate speed.</li>
+</ul>
+<h4>Python basics</h4>
+<ul>
+<li><b>Values:</b> Strings, numbers, booleans, lists, and dictionaries.</li>
+<li><b>Control:</b> Conditions, loops, and functions.</li>
+<li><b>Structure:</b> Modules, exceptions, and reading files.</li>
+</ul>
+<h4>How the web works</h4>
+<ul>
+<li><b>Files and processes:</b> Folders, paths, terminal commands, programs, and processes.</li>
+<li><b>URLs, browsers, servers:</b> The browser asks, the server answers.</li>
+<li><b>HTTP:</b> Requests, responses, and status codes (200 OK, 404 not found, 500 server error).</li>
+<li><b>Journey of one request:</b> Button, backend, and back. A disconnected browser, a failed server, and an empty search each show up at a different step.</li>
+</ul>
+<h4>File formats for AI</h4>
+<ul>
+<li><b>Markdown (.md):</b> Plain text with simple markup. Best for prompts, notes, and project instructions.</li>
+<li><b>JSON and JSON Lines (.jsonl):</b> Structured data for APIs. JSON Lines stores one record per line.</li>
+<li><b>YAML:</b> Readable settings and configuration files.</li>
+<li><b>CSV, Parquet, Arrow:</b> Tables in text or column-based formats.</li>
+<li><b>NumPy files (.npy, .npz):</b> Saved arrays.</li>
+<li><b>Unicode and UTF-8:</b> Reliable text storage across languages.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Git and GitHub:</b> Track changes and collaborate through branches and reviews.</li>
+<li><b>SQL:</b> Filter, join, and summarize stored records.</li>
+<li><b>Environments:</b> Separate packages for each project and record their versions.</li>
+<li><b>Environment variables and secrets:</b> Keep API keys out of code.</li>
+<li><b>Testing and debugging:</b> Check expected behavior and trace failures.</li>
+<li><b>Debugging steps:</b> Reproduce the failure, capture the input, inspect values, read logs and tracebacks, and find the first wrong step.</li>
+<li><b>Test levels:</b> Unit test (one function), integration test (connected parts), end-to-end test (a full user journey).</li>
+</ul>
+<h4>Project handoff</h4>
+<ul>
+<li><b>Git in practice:</b> Commits, branches, diffs, and rollback to a working version.</li>
+<li><b>README:</b> Setup instructions that a stranger can follow.</li>
+<li><b>Project brief:</b> Decisions made, changes AI may make, and acceptance tests.</li>
+<li><b>Fresh-session test:</b> A new AI session reads the files, runs the tests, and explains the next feature.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Write a script that reads a CSV, cleans it, and saves a JSON file.</li>
+<li><b>Common mistake:</b> Putting API keys inside code that gets shared.</li>
+<li><b>Check:</b> Does your project run on a fresh environment from your instructions?</li>
+<li><b>Practice:</b> Ask AI to explain a ten-line function with one sample input. Predict which records a filter keeps, change one rule, run it, and compare.</li>
+<li><b>Practice:</b> Catch a ranking mistake with a failing test. Confirm it passes after the fix and an unrelated search still works.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">4</span><span class="st">Data</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Data basics</h4>
+<ul>
+<li><b>Features and labels:</b> Inputs the model uses, and the answers it predicts.</li>
+<li><b>Representative sampling:</b> Data should match real-world use.</li>
+<li><b>Annotation quality:</b> Clear labeling rules and agreement between labelers.</li>
+</ul>
+<h4>Records and evidence</h4>
+<ul>
+<li><b>Record design:</b> Define field types, IDs, dates, and missing values.</li>
+<li><b>Provenance and freshness:</b> Store where a fact came from and when it was checked.</li>
+<li><b>Evidence record:</b> Feature support, installation price, feature price, evidence URL, and date checked.</li>
+<li><b>Unknown is a valid value:</b> Leave unsupported fields unknown. Never guess.</li>
+<li><b>Access and usage terms:</b> Check permission and conditions before building a feature around an outside source.</li>
+</ul>
+<h4>Data risks</h4>
+<ul>
+<li><b>Data leakage:</b> Information that would be unavailable at prediction time sneaks into training.</li>
+<li><b>Class imbalance:</b> Rare outcomes need special handling.</li>
+<li><b>GIGO:</b> Poor data quality limits every model built on it. Fix data before changing models.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Splits:</b> Train, validation, and test sets. Use stratified, grouped, or time-based splits when needed.</li>
+<li><b>Quality checks:</b> Find missing values, duplicates, and invalid ranges.</li>
+<li><b>Preparation:</b> Encode categories, scale numbers, and create features.</li>
+<li><b>Augmentation and synthetic data:</b> Create controlled variations or simulated examples, then check their quality.</li>
+<li><b>Pipelines and versioning:</b> Track data lineage, versions, and documentation.</li>
+<li><b>Tools:</b> pandas, DuckDB for local queries, Spark for large jobs, DVC for data versions.</li>
+</ul>
+<h4>Storing and querying</h4>
+<ul>
+<li><b>Start with SQLite:</b> Move to PostgreSQL when many users and background jobs share a database.</li>
+<li><b>Tables and keys:</b> Primary keys identify a row. Foreign keys link tables.</li>
+<li><b>Indexes and transactions:</b> Faster lookups, and changes that succeed or fail together.</li>
+<li><b>Schema migrations:</b> Change the structure without losing old records.</li>
+<li><b>Safe refresh:</b> Refreshing a record twice must not create duplicates.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Audit a messy dataset and list every problem before modeling.</li>
+<li><b>Common mistake:</b> Tuning on the test set.</li>
+<li><b>Check:</b> Can someone else reproduce your dataset from its documentation?</li>
+<li><b>Practice:</b> Retrieve one permitted sample record and store it with its evidence URL and date. Refresh it twice and confirm there are no duplicates.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">5</span><span class="st">Classic Machine Learning</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Learning types</h4>
+<ul>
+<li><b>Supervised:</b> Learn from labeled data.</li>
+<li><b>Unsupervised:</b> Find patterns without labels.</li>
+<li><b>Reinforcement:</b> Learn from rewards and trial and error.</li>
+<li><b>Semi-supervised and self-supervised:</b> Use few labels or let data create its own labels.</li>
+</ul>
+<h4>Core tasks</h4>
+<ul>
+<li><b>Regression:</b> Predict a number.</li>
+<li><b>Classification:</b> Predict a category.</li>
+<li><b>Clustering:</b> Group similar items.</li>
+<li><b>Anomaly detection:</b> Flag unusual records.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><h4>Models</h4>
+<ul>
+<li><b>Linear and logistic regression:</b> Simple, explainable baselines.</li>
+<li><b>Trees and ensembles:</b> Decision trees, random forests, and boosting (XGBoost, LightGBM).</li>
+<li><b>Other models:</b> Nearest neighbors, Naive Bayes, and SVMs.</li>
+</ul>
+<h4>Training practice</h4>
+<ul>
+<li><b>Regularization:</b> Keep models simple.</li>
+<li><b>Cross-validation and tuning:</b> Compare settings fairly using random or Bayesian search.</li>
+<li><b>Calibration and dimensionality reduction:</b> Check probability accuracy and summarize inputs with PCA or UMAP.</li>
+</ul>
+<h4>Other areas</h4>
+<ul>
+<li><b>Bandits and reinforcement basics:</b> Balance trying new options with using known good ones.</li>
+<li><b>Reinforcement learning in depth:</b> Reward design, exploration vs exploitation, MDPs, Q-learning, policy gradients, and multi-agent RL.</li>
+<li><b>Causal inference:</b> Estimate what happens when you change something.</li>
+</ul>
+<p><b>Tools:</b> scikit-learn, XGBoost, LightGBM.</p></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Compare a simple rule, a linear model, and boosted trees on the same data.</li>
+<li><b>Common mistake:</b> Using a complex model without a simple baseline.</li>
+<li><b>Check:</b> Does the model underfit or overfit? Read the bias-variance balance.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">6</span><span class="st">Neural Network Training</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Building blocks</h4>
+<ul>
+<li><b>Neuron, weight, bias, layer:</b> The smallest pieces of a neural network.</li>
+<li><b>Activation function:</b> Adds non-linearity so the network learns complex patterns.</li>
+<li><b>Loss function:</b> Measures how wrong predictions are.</li>
+</ul>
+<h4>Learning process</h4>
+<ul>
+<li><b>Gradient descent and backpropagation:</b> Update weights step by step to reduce loss.</li>
+<li><b>Tensors and shapes:</b> Data stored as arrays, with sizes that must match across operations.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Optimizers:</b> AdamW and momentum SGD control how weights are updated.</li>
+<li><b>Learning rate and schedules:</b> Set step size, often starting with warmup.</li>
+<li><b>Epochs and mini-batches:</b> Passes over data, and small groups processed together.</li>
+<li><b>Stability tools:</b> Weight initialization, normalization layers, and gradient checks.</li>
+<li><b>Regularization in training:</b> Dropout, weight decay, and early stopping.</li>
+<li><b>Automatic differentiation:</b> Libraries calculate gradients for you.</li>
+<li><b>Tools:</b> PyTorch or TensorFlow.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Build a small network in PyTorch that learns a simple pattern.</li>
+<li><b>Common mistake:</b> A learning rate that is too high, causing the loss to jump around.</li>
+<li><b>Check:</b> Read the learning curves. Are training and validation loss both falling?</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">7</span><span class="st">Deep Learning Architectures</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Architectures</h4>
+<ul>
+<li><b>CNN:</b> Good at images, finds edges and shapes with small filters.</li>
+<li><b>RNN, LSTM, GRU:</b> Process sequences one step at a time.</li>
+<li><b>Transformer:</b> Reads all parts of the input at once with attention. Basis of modern AI.</li>
+<li><b>Autoencoders and VAEs:</b> Compress data and rebuild it.</li>
+<li><b>Graph neural networks:</b> Learn from linked data, like social networks or molecules.</li>
+<li><b>State-space models:</b> Efficient sequence models that keep a compact state.</li>
+</ul>
+<h4>Key ideas</h4>
+<ul>
+<li><b>Positional encoding:</b> Tells a Transformer word order.</li>
+<li><b>Residual connections:</b> Skip paths that make deep networks trainable.</li>
+<li><b>Mixture of Experts:</b> Only some parts of a large model run for each input.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Self-supervised and contrastive learning:</b> Create learning targets from the data itself.</li>
+<li><b>Knowledge distillation:</b> A small model learns to copy a large one.</li>
+<li><b>Transfer learning:</b> Reuse a model trained on one task for another.</li>
+<li><b>Continual learning:</b> Learn new tasks without forgetting old ones.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Fine-tune a pretrained CNN on your own image set.</li>
+<li><b>Common mistake:</b> Training from scratch when a pretrained model would work.</li>
+<li><b>Check:</b> Can you explain which architecture fits which kind of data?</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">8</span><span class="st">Large Language Models</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>How LLMs read</h4>
+<ul>
+<li><b>Tokens:</b> Small text pieces that models read and write.</li>
+<li><b>Embeddings:</b> Number lists that capture meaning.</li>
+<li><b>Attention:</b> Lets each word look at other words for context.</li>
+<li><b>Context window:</b> How much text the model can consider at once.</li>
+</ul>
+<h4>How LLMs learn</h4>
+<ul>
+<li><b>Pretraining:</b> Predict the next token on huge amounts of text.</li>
+<li><b>Model types:</b> Decoder-only (GPT style), encoder-only (BERT style), encoder-decoder.</li>
+<li><b>Scaling laws:</b> Bigger models, more data, and more compute predictably help. The Chinchilla rule suggests about 20 training tokens per parameter.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><h4>Generating answers</h4>
+<ul>
+<li><b>Temperature, top-p, top-k, beam search:</b> Control how the model picks words.</li>
+<li><b>Chat templates and roles:</b> Format system, user, and assistant messages correctly.</li>
+<li><b>KV cache:</b> Speeds up long answers.</li>
+</ul>
+<h4>Adapting models</h4>
+<ul>
+<li><b>Prompting:</b> Zero-shot, few-shot, in-context learning, chain-of-thought.</li>
+<li><b>Instruction tuning:</b> Teach the model to follow instructions.</li>
+<li><b>LoRA and QLoRA:</b> Cheap fine-tuning with small add-on layers.</li>
+<li><b>Preference training:</b> RLHF, DPO, and reward models. PPO is a common reinforcement learning method for this, and GRPO compares several answers to the same question.</li>
+<li><b>Verifiable rewards:</b> Score answers with tests or exact answers.</li>
+</ul>
+<h4>Limits</h4>
+<ul>
+<li><b>Hallucination:</b> Confident wrong answers.</li>
+<li><b>Knowledge cutoff:</b> The date after which the model has no training data.</li>
+<li><b>Long-context limits:</b> Details buried in long inputs can be missed.</li>
+<li><b>Multilingual gaps:</b> Quality varies across languages.</li>
+<li><b>Sycophancy:</b> The model agrees with you even when you are wrong.</li>
+<li><b>Three different jobs:</b> Generation writes, lookup finds, and calculation computes. A model can write a convincing price claim from incomplete evidence, so check it against a source.</li>
+</ul>
+<h4>Selecting a model</h4>
+<ul>
+<li><b>Same tasks, fair comparison:</b> Run the same examples through hosted and local models.</li>
+<li><b>Measure:</b> Task quality, response time, input and output cost, language coverage, context needs, and privacy.</li>
+<li><b>Benchmarks:</b> Use public ones only to build a shortlist. Confirm on your own examples.</li>
+<li><b>Record and justify:</b> Save settings, costs, and failure cases, then explain the choice.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Compare the same task with zero-shot and few-shot prompts and record the difference.</li>
+<li><b>Common mistake:</b> Trusting an LLM answer without checking the source.</li>
+<li><b>Check:</b> Does the answer match your evaluation set?</li>
+<li><b>Practice:</b> Run the same examples through two models and write down the settings, costs, and failures.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">9</span><span class="st">Generative AI</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Generation types</h4>
+<ul>
+<li><b>Text, image, audio, video, 3D:</b> Different outputs from different models.</li>
+<li><b>Diffusion models:</b> Turn noise into a clear image step by step.</li>
+<li><b>Autoregressive generation:</b> Create output one piece at a time.</li>
+<li><b>Flow matching and normalizing flows:</b> Other methods that move from noise to output.</li>
+<li><b>GANs:</b> Older method where a generator and a judge compete.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Latent diffusion:</b> Work in compressed space for speed.</li>
+<li><b>Conditioning and guidance:</b> Steer output with prompts, poses, layouts, or style references.</li>
+<li><b>Editing:</b> Inpainting and outpainting.</li>
+<li><b>Consistency:</b> Keep identity and style steady across edits and frames.</li>
+<li><b>Neural codecs:</b> Compact audio and video representations.</li>
+<li><b>Tools:</b> Diffusers for code, ComfyUI for visual workflows.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Generate the same image with three different prompts and compare.</li>
+<li><b>Common mistake:</b> Ignoring rights to training data and outputs.</li>
+<li><b>Check:</b> Is the output consistent across edits? Does it show clear AI origin where needed?</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">10</span><span class="st">Applications</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Language and vision</h4>
+<ul>
+<li><b>NLP:</b> Understanding and writing language.</li>
+<li><b>Computer vision:</b> Understanding images and video.</li>
+<li><b>Speech AI:</b> Speech to text and text to speech.</li>
+</ul>
+<h4>Other areas</h4>
+<ul>
+<li><b>Recommendation and search:</b> Rank items by relevance.</li>
+<li><b>Forecasting and anomaly detection:</b> Predict future values and flag unusual events.</li>
+<li><b>Robotics and simulation:</b> Control machines, often tested in simulations first.</li>
+<li><b>Science and healthcare:</b> Discovery and medical support.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Object detection and segmentation:</b> YOLO for detection, masks for exact shapes.</li>
+<li><b>Document AI and OCR:</b> Read forms, tables, and scans.</li>
+<li><b>Graph analytics:</b> Find fraud or hidden links in networks.</li>
+<li><b>Operations research:</b> Optimize schedules, routes, and inventory.</li>
+<li><b>Geospatial AI:</b> Analyze satellite images and maps.</li>
+<li><b>Edge and industrial AI:</b> Run models on devices, sometimes offline.</li>
+<li><b>Multi-agent systems and human-AI interaction:</b> Several AIs working together, and designing how people guide them.</li>
+<li><b>Domain AI:</b> Law (contract review), finance (risk, fraud, forecasting), music, games, and robotics control each need domain experts and special validation.</li>
+<li><b>Research and knowledge systems:</b> Search ranking, information extraction, knowledge graphs, conflicting sources, citation checking, and curated test sets.</li>
+<li><b>Voice, image, and video products:</b> Streaming, latency, and media-specific evaluation.</li>
+<li><b>Predictive business software:</b> Forecasting, experiments, data pipelines, and drift monitoring.</li>
+<li><b>Industry applications:</b> Real domain workflows, realistic records, expert validation, system integration, and the cost of a wrong decision.</li>
+<li><b>When to specialize:</b> Add a topic only when you can name the product requirement or failure that needs it.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Build one application end to end, such as a receipt reader.</li>
+<li><b>Common mistake:</b> Choosing a fancy model when a simple rule works.</li>
+<li><b>Check:</b> Do real users succeed with it?</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">11</span><span class="st">Building AI Applications</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Core ideas</h4>
+<ul>
+<li><b>Context engineering:</b> Decide exactly what the model sees for each task.</li>
+<li><b>Structured output:</b> Force answers into a fixed format like JSON.</li>
+<li><b>Grounding:</b> Tie answers to real sources and check citations.</li>
+</ul>
+<h4>Architecture</h4>
+<ul>
+<li><b>RAG:</b> Retrieve documents first, then answer from them.</li>
+<li><b>Vector databases:</b> Store embeddings for fast similarity search.</li>
+<li><b>Agents:</b> Models that plan, use tools, and check progress.</li>
+<li><b>Multi-agent systems:</b> Several agents specialized for different roles.</li>
+</ul>
+<h4>One request, end to end</h4>
+<ul>
+<li><b>Flow:</b> The interface collects the question. The backend validates it. Search finds candidates. Code removes duplicates and enforces requirements. The model reads passages and explains. A database saves the evidence and date. Logs record what happened.</li>
+<li><b>Debug order:</b> If the right tool never entered the candidate list, inspect retrieval before changing the final prompt.</li>
+<li><b>Partial vs complete:</b> Show clearly when a source failed, and do not confuse that with zero matches.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><h4>Building retrieval</h4>
+<ul>
+<li><b>Chunking, hybrid search, reranking:</b> Split documents well, combine keyword and semantic search, then reorder results.</li>
+<li><b>Parsing, metadata, source quality:</b> Clean documents, keep source and date, and prefer reliable sources.</li>
+<li><b>Citations:</b> Show the passage and link behind every recommendation.</li>
+<li><b>Three separate failures:</b> A missing source, a poor passage, and a misread passage. Diagnose each on its own.</li>
+</ul>
+<h4>Agent building</h4>
+<ul>
+<li><b>Tool calling and MCP:</b> Connect models to tools and data through a standard.</li>
+<li><b>Memory:</b> Short-term for the current task, long-term across sessions.</li>
+<li><b>Memory types:</b> Facts (what is true), events (what happened), and procedures (how to do things). Keep them separate.</li>
+<li><b>Computer-use agents:</b> AI that controls a screen with a mouse and keyboard.</li>
+<li><b>Agentic coding:</b> AI that plans, writes, tests, and fixes code on its own.</li>
+<li><b>Workflows and harnesses:</b> Fixed steps or AI-chosen steps, with rules for permissions and stopping.</li>
+<li><b>Model routing and caching:</b> Pick models by task and reuse answers to save cost.</li>
+</ul>
+<h4>Project files for AI</h4>
+<ul>
+<li><b>Markdown instructions:</b> <code>CLAUDE.md</code> and <code>AGENTS.md</code> tell coding agents how a project works.</li>
+<li><b><code>llms.txt</code>:</b> A Markdown file that gives AI a clean map of a website.</li>
+<li><b>Skills files:</b> Reusable instruction folders for specific tasks.</li>
+</ul>
+<h4>Other tools</h4>
+<ul>
+<li><b>A2A:</b> A protocol for agents to hand off tasks.</li>
+<li><b>Frameworks:</b> LangChain, LlamaIndex, LangGraph.</li>
+</ul>
+<h4>Learning and self-improving agents</h4>
+<ul>
+<li><b>Skill library:</b> The AI saves each working solution as a reusable skill and picks from the library next time.</li>
+<li><b>Failure memory:</b> After a failed attempt, the system writes a short lesson and checks it before the next try.</li>
+<li><b>Council and debate:</b> Several models answer and critique each other, then a judge picks or merges the result.</li>
+<li><b>Preference learning:</b> Learn your taste from what you approve or reject, so suggestions get more personal.</li>
+</ul>
+<h4>Choosing a method</h4>
+<ul>
+<li><b>Prompting first, RAG for knowledge, fine-tuning for behavior.</b></li>
+</ul>
+<h4>Prompt and context design</h4>
+<ul>
+<li><b>Prompt parts:</b> Objective, definitions, examples, counterexamples, allowed sources, output format, and rules for uncertainty.</li>
+<li><b>Per-call context:</b> Decide exactly what goes into each call.</li>
+<li><b>Validate in code:</b> Check the returned fields in your application, not by trust.</li>
+<li><b>Request to filters:</b> Convert a natural request into required features and preferences. Handle ambiguity and malformed output. Keep unknown prices visible.</li>
+</ul>
+<h4>Workflow controls</h4>
+<ul>
+<li><b>Tool schemas and validated arguments:</b> Check every tool call before it runs.</li>
+<li><b>Fixed vs agent-chosen steps:</b> Use a fixed workflow unless open choice is needed.</li>
+<li><b>Budgets:</b> Set limits on time, tool calls, and spending.</li>
+<li><b>Failed lookup:</b> Stop within budget, return the evidence already found, and say what is unresolved.</li>
+</ul>
+<h4>Memory and customization</h4>
+<ul>
+<li><b>Four separate things:</b> Conversation context, saved preferences, retrieved material, and learned model parameters.</li>
+<li><b>Fix a specific failure with the cheapest tool:</b> Compare a prompt change, a lookup, a deterministic algorithm, and fine-tuning.</li>
+<li><b>Changing facts like prices:</b> Refresh from sources instead of training them in.</li>
+<li><b>Fine-tuning:</b> Needs many examples of the exact failure and the correct output.</li>
+</ul>
+<h4>External APIs</h4>
+<ul>
+<li><b>Read the docs first:</b> Methods, headers, payloads, and authentication.</li>
+<li><b>Server-side credentials:</b> Never put keys in the browser.</li>
+<li><b>Pagination, rate limits, timeouts:</b> Fetch all pages, slow down when limited, and use a bounded number of retries.</li>
+<li><b>Error handling:</b> An unavailable source is not the same as a successful search with zero matches.</li>
+</ul>
+<h4>Candidate pipeline</h4>
+<ul>
+<li><b>Merge by identity:</b> Use sets and dictionaries to remove duplicates.</li>
+<li><b>Keyword search and ranking:</b> Start with a baseline you can reproduce without a model.</li>
+<li><b>Required-feature filter:</b> A popular but irrelevant tool must not pass.</li>
+<li><b>Explain and audit:</b> Explain each top result and look for a relevant tool you missed (precision and recall).</li>
+</ul>
+<h4>Interface</h4>
+<ul>
+<li><b>Basics:</b> Forms, input validation, accessibility, loading and error states.</li>
+<li><b>Show evidence:</b> Let users open the supporting passage and tell partial results from complete ones.</li>
+<li><b>Let users correct assumptions:</b> Make the system's guesses visible and editable.</li>
+<li><b>Start simple:</b> A basic Python interface comes before a separate frontend stack.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Build a RAG app that answers questions from your own PDFs with citations.</li>
+<li><b>Common mistake:</b> Fine-tuning when better retrieval would solve the problem.</li>
+<li><b>Check:</b> Does each answer point to a source passage that supports it?</li>
+<li><b>Practice:</b> Fetch two pages of results and combine them. Then simulate an unavailable source and compare the response with a search that has zero matches.</li>
+<li><b>Practice:</b> Simulate a failed lookup. The system should stop within budget and say what is unresolved.</li>
+<li><b>Check:</b> Can a new user enter a question, open the supporting passage, and tell partial from complete results?</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">12</span><span class="st">Deployment and Production</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><ul>
+<li><b>Deployment:</b> Making a model available to users, usually through an API.</li>
+<li><b>Latency and throughput:</b> How fast one request is served, and how many the system handles.</li>
+<li><b>Reliability:</b> Timeouts, fallbacks, and service targets.</li>
+</ul>
+<h4>System design</h4>
+<ul>
+<li><b>Boundaries and data flow:</b> Draw the whole system on one page.</li>
+<li><b>Sync vs background work:</b> Slow jobs run in the background through queues.</li>
+<li><b>Concurrency and stale data:</b> Plan for simultaneous searches, old cache entries, and slow sources.</li>
+<li><b>Idempotency:</b> Retrying an action must not repeat its effect, such as a double payment.</li>
+<li><b>Code, model, or human:</b> Decide which steps use each.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><h4>Serving</h4>
+<ul>
+<li><b>Endpoints, batch jobs, streaming:</b> Three ways to deliver results.</li>
+<li><b>Serving engines:</b> vLLM for efficient language model serving.</li>
+<li><b>Containers and scaling:</b> Docker to package, Kubernetes to scale.</li>
+</ul>
+<h4>Speed and size</h4>
+<ul>
+<li><b>Quantization and pruning:</b> Smaller numbers and fewer parts for lighter models.</li>
+<li><b>Distillation:</b> Train a small model from a large one.</li>
+<li><b>Batching and caching:</b> Process requests together and reuse results.</li>
+<li><b>Mixed precision:</b> Smaller number formats for faster training.</li>
+</ul>
+<h4>Model formats</h4>
+<ul>
+<li><b>Safetensors:</b> Safe format for model weights.</li>
+<li><b>GGUF:</b> Format for running models locally.</li>
+<li><b>ONNX:</b> Format for moving models between tools.</li>
+</ul>
+<h4>Release and monitoring</h4>
+<ul>
+<li><b>CI/CD:</b> Automatic tests before release.</li>
+<li><b>Shadow tests, canaries, rollback:</b> Test quietly, release gradually, undo if needed.</li>
+<li><b>Drift and training-serving skew:</b> Detect changing data or mismatched preparation.</li>
+<li><b>Tracing and observability:</b> Follow each request to find slow or broken steps.</li>
+<li><b>Cloud and GPUs:</b> Rent compute from AWS, Google Cloud, or Azure.</li>
+</ul>
+<h4>Training at scale</h4>
+<ul>
+<li><b>Distributed training and sharding:</b> Split work across many GPUs (FSDP, ZeRO).</li>
+<li><b>Checkpoints:</b> Save progress so training can resume.</li>
+</ul>
+<h4>Operating the product</h4>
+<ul>
+<li><b>Environments and config:</b> Local vs hosted, pinned dependency versions, and settings kept out of code.</li>
+<li><b>Publish simple first:</b> Add infrastructure only when needed.</li>
+<li><b>Alerts, backups, restore:</b> Test that a backup can actually be restored.</li>
+<li><b>Load testing:</b> Check behavior under many users before launch.</li>
+<li><b>Cost per successful task:</b> Count failed attempts, retries, response time, human review, support, provider dependency, and source licenses.</li>
+<li><b>Release evidence:</b> Decide in advance what results justify releasing or reverting a version.</li>
+<li><b>Feedback:</b> Use user feedback to choose the next change.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Deploy one model as an API, then add monitoring.</li>
+<li><b>Common mistake:</b> Deploying without a rollback plan.</li>
+<li><b>Check:</b> Can you roll back to the previous version in minutes?</li>
+<li><b>Practice:</b> Walk through simultaneous searches, a stale cache, a slow source, and a restarted job. Show that a retry cannot duplicate an action.</li>
+<li><b>Practice:</b> Share a working link, trace one failed request, restore a test backup, and roll back a bad release. A second person should reproduce your deployment from the notes.</li>
+<li><b>Practice:</b> Estimate the cost of 1,000 successful searches from measured usage, including failures.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">13</span><span class="st">Responsible AI, Safety, and Governance</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Fairness and privacy</h4>
+<ul>
+<li><b>Bias and fairness:</b> Check whether some groups get worse results.</li>
+<li><b>Privacy:</b> Differential privacy and federated learning protect personal data.</li>
+<li><b>Consent and data rights:</b> Permission to collect and use data.</li>
+</ul>
+<h4>Safety</h4>
+<ul>
+<li><b>Alignment:</b> Making AI do what humans intend.</li>
+<li><b>Hallucination and misuse:</b> Confident errors, scams, and deepfakes.</li>
+<li><b>Reward hacking:</b> Shortcuts that score well but miss the real goal.</li>
+<li><b>Scalable oversight:</b> Using AI to help humans check AI that is too complex to check alone.</li>
+<li><b>AI control:</b> Designing systems so AI cannot cause harm even if it misbehaves.</li>
+<li><b>Deceptive alignment:</b> A model that behaves well only while it is being tested.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><h4>Security</h4>
+<ul>
+<li><b>Threat modeling and red teaming:</b> Find what could go wrong and test it.</li>
+<li><b>Prompt injection defense:</b> Treat text in documents and web pages as untrusted.</li>
+<li><b>Data poisoning and supply chain:</b> Verify where data, packages, and models come from.</li>
+<li><b>Least privilege and sandboxing:</b> Give AI only the access it needs.</li>
+<li><b>Approval gates:</b> Humans approve high-impact actions.</li>
+<li><b>Adversarial examples:</b> Tiny input changes that fool a model, like a sticker that makes a sign misread.</li>
+<li><b>Model stealing:</b> Copying a model by querying it many times.</li>
+<li><b>Membership inference:</b> Testing whether a specific record was in the training data.</li>
+</ul>
+<h4>Documentation and rules</h4>
+<ul>
+<li><b>Model cards and impact assessments:</b> Record purpose, limits, and test results.</li>
+<li><b>Watermarking and provenance:</b> Mark or trace AI-made content.</li>
+<li><b>Copyright and licensing:</b> Check rights for data, code, models, and outputs.</li>
+<li><b>NIST AI RMF and the EU AI Act:</b> Risk frameworks and laws.</li>
+<li><b>India's DPDP Act (2023):</b> India's data protection law, covering consent and handling of personal data. Check the current rules and deadlines before relying on them.</li>
+<li><b>Dangerous capability evals:</b> Tests for whether a model could help with weapons or cyberattacks.</li>
+<li><b>Compute governance:</b> Rules that track or limit large amounts of computing power.</li>
+<li><b>Responsible scaling policies:</b> A company's rules for adding safeguards or pausing as models get stronger.</li>
+<li><b>Incident response:</b> Define who can stop a system and how harm is handled.</li>
+</ul>
+<h4>Accounts, data, and sources</h4>
+<ul>
+<li><b>Authentication vs authorization:</b> Who you are, versus what you may access.</li>
+<li><b>User isolation:</b> Each user sees only their own records.</li>
+<li><b>Input validation and secrets:</b> Check all inputs, and keep keys in a secret manager.</li>
+<li><b>Retention and deletion:</b> Decide how long data is kept and how it is removed.</li>
+<li><b>Source permission:</b> Confirm you may use each outside source.</li>
+<li><b>Clean logs:</b> Logs must not contain credentials.</li>
+</ul>
+<h4>Wider impact</h4>
+<ul>
+<li><b>Jobs, energy, water, and access:</b> Social and environmental effects.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Write a model card for one of your projects.</li>
+<li><b>Common mistake:</b> Shipping without knowing who the system could harm.</li>
+<li><b>Check:</b> Can you name who can stop your system right now?</li>
+<li><b>Practice:</b> Test with two dummy users, each seeing only their own records. Confirm that instructions hidden in a retrieved page cannot grant access or trigger an unauthorized action.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">14</span><span class="st">Research Frontier</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Scaling and reasoning</h4>
+<ul>
+<li><b>Scaling laws and compute limits:</b> Predictable gains, but finite resources.</li>
+<li><b>Test-time compute:</b> Think longer during an answer for harder problems.</li>
+<li><b>Reasoning models:</b> Models that work through steps before answering.</li>
+<li><b>Emergent abilities:</b> Skills that seem to appear suddenly as models grow. Some may be measurement effects, and this is debated.</li>
+<li><b>Grokking:</b> A model suddenly generalizes long after it has memorized the training data.</li>
+</ul>
+<h4>Self-improvement</h4>
+<ul>
+<li><b>Recursive self-improvement (RSI):</b> An AI improves parts of its own improvement process, so each round can make the next better. Current demos are limited to narrow tasks.</li>
+<li><b>Safe RSI loop:</b> Run, test on a fixed set, find failures, propose one change, retest, get human approval, archive the old version.</li>
+<li><b>RSI safety rules:</b> Humans approve changes. The judge and test set stay out of the system's reach. Change one thing at a time. Protect core rules. Always keep a rollback.</li>
+<li><b>Intelligence explosion:</b> A theory that unchecked RSI could speed up very fast. It is a debated risk, not a proven outcome.</li>
+<li><b>Self-training with synthetic data:</b> Learn from AI-produced examples that are checked.</li>
+<li><b>Model collapse:</b> Quality can fall when models learn only from AI output.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Process supervision:</b> Feedback on each reasoning step.</li>
+<li><b>Self-refinement:</b> The model critiques and revises its own answer.</li>
+<li><b>AI-assisted research loops:</b> Propose, test, and improve ideas automatically (AlphaEvolve).</li>
+<li><b>Test-time adaptation and machine unlearning:</b> Adjust during use, or remove a training example's influence.</li>
+</ul>
+<h4>Understanding models</h4>
+<ul>
+<li><b>Mechanistic interpretability:</b> Study which internal parts cause a behavior.</li>
+<li><b>Neuro-symbolic AI:</b> Combine learning with logic and rules.</li>
+</ul>
+<h4>Other frontiers</h4>
+<ul>
+<li><b>World models and embodied AI:</b> Models of how environments change, and AI in physical bodies.</li>
+<li><b>Long-horizon agency:</b> Agents that handle many steps and recover from errors.</li>
+<li><b>Multimodal AI:</b> Models that handle text, images, audio, and video.</li>
+<li><b>Open vs closed models:</b> Downloadable models vs hosted services.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Read one recent paper and reproduce a single result.</li>
+<li><b>Common mistake:</b> Believing a demo shows general ability.</li>
+<li><b>Check:</b> Have you separated what is proven from what is claimed?</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">15</span><span class="st">Projects</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><ul>
+<li><b>Projects prove skill.</b> Each project should test one idea end to end.</li>
+<li><b>Completion standard:</b> You are done with the core when you can build a new application from a blank project, explain a wrong result, improve it using evidence, and recover from a bad release.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Tabular comparison:</b> Rule vs linear model vs boosted trees.</li>
+<li><b>Data audit:</b> Find leakage and duplicates, then measure the effect of fixing them.</li>
+<li><b>Forecast with backtesting:</b> Predict and replay past periods.</li>
+<li><b>Document extraction:</b> Scanned invoices to validated fields.</li>
+<li><b>Recommendation prototype:</b> Compare against a popularity baseline.</li>
+<li><b>Chatbot and RAG app:</b> LLM API plus your own documents.</li>
+<li><b>Agent with tools:</b> An AI that uses search or calculators.</li>
+<li><b>Evaluation suite:</b> Tests, version comparison, and release blockers.</li>
+<li><b>Paper reproduction:</b> Match a published result closely.</li>
+<li><b>Deployed app:</b> Put one project online for others to use.</li>
+</ul>
+<h4>Build ladder (RR Engineer)</h4>
+<ul>
+<li><b>1. Searchable catalog:</b> Python and SQLite with 50 hand-picked records. Pass: you can change a ranking rule and explain the effect.</li>
+<li><b>2. First wrapper:</b> One model call that turns a request into validated filters. Pass: required features survive rewording, and ambiguity is handled openly.</li>
+<li><b>3. Evidence-backed researcher:</b> One live source with passages, links, and timestamps. Pass: every claim is traceable and unsupported claims stay unknown.</li>
+<li><b>4. Multi-source researcher:</b> A second source, deduplication, ranking, caching, and time limits. Pass: losing a source gives clearly labeled partial results within budget.</li>
+<li><b>5. Released product:</b> Hosted interface, evaluation suite, feedback, monitoring, and rollback. Pass: someone uses it unaided and you can diagnose their failed request.</li>
+<li><b>6. Transfer project:</b> A different application, such as a supplier-quotation comparison tool. Trace every quoted price to its source and keep missing freight terms unknown. Explain what design you reused and what you changed.</li>
+</ul>
+<h4>Brief for an AI coding assistant</h4>
+<ul>
+<li><b>Fill in for each feature:</b> User and decision, one feature to build, inputs and permitted sources, expected output with evidence, one example that should pass, one that should fail, handling of missing or contradictory evidence, maximum time, cost, and tool calls, and actions needing your approval.</li>
+<li><b>Before editing, the AI explains:</b> The smallest workable design, files affected, and the assumption most likely to be wrong.</li>
+<li><b>After editing, the AI shows:</b> The diff, test results, reproduction and rollback steps, and anything it could not verify.</li>
+<li><b>Keep some test questions private</b> until evaluation.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Rule:</b> Write a short README for each project with the problem, method, result, and limits.</li>
+<li><b>Check:</b> Can someone else run it from your instructions?</li>
+<li><b>Review loop:</b> Define success yourself. Ask AI for options and choose one. Inspect the change, run a normal case and a failure case, then a held-out example. Release only when you can explain the result and recover the previous version.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">16</span><span class="st">Classical AI, Search, and Planning</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><ul>
+<li><b>Search:</b> Finding a path from a start state to a goal.</li>
+<li><b>Logic and knowledge:</b> Facts, rules, and knowledge graphs.</li>
+<li><b>Planning:</b> Choosing steps that reach a goal, even under uncertainty.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Search methods:</b> Breadth-first, depth-first, A*.</li>
+<li><b>Heuristics:</b> Quick estimates that guide search.</li>
+<li><b>Game search:</b> Minimax and Monte Carlo tree search.</li>
+<li><b>Constraint solving:</b> SAT and SMT solvers for rule-based problems.</li>
+<li><b>Probabilistic models:</b> Graphical models for uncertain variables.</li>
+<li><b>Fuzzy logic and evolutionary algorithms:</b> Partial truth and evolving candidates.</li>
+<li><b>Historical systems:</b> Expert systems were rule-based AI from the 1980s.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Solve a maze with A* and compare it with breadth-first search.</li>
+<li><b>Common mistake:</b> Ignoring classical methods when they are simpler and cheaper.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">17</span><span class="st">Evaluation and Measurement</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><ul>
+<li><b>Evaluation:</b> Measuring whether a system is good for its real purpose.</li>
+<li><b>Metrics:</b> Accuracy, precision, recall, and cost of errors.</li>
+<li><b>Benchmarks:</b> Standard tests such as MMLU and SWE-bench.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><h4>Test design</h4>
+<ul>
+<li><b>Gold sets and rubrics:</b> Trusted examples and scoring rules. Every module needs one, and no change ships unless it passes.</li>
+<li><b>Component and end-to-end tests:</b> Locate where failures start.</li>
+<li><b>Slice testing and error analysis:</b> Find weak groups and failure types.</li>
+<li><b>Ranking and text metrics:</b> Precision@k, recall@k, and NDCG score ranked results. BLEU and ROUGE compare text to a reference but are weak for open-ended answers.</li>
+</ul>
+<h4>Quality checks</h4>
+<ul>
+<li><b>Uncertainty in scores:</b> Check whether differences are real.</li>
+<li><b>Robustness and distribution shift:</b> Test noisy or changed inputs.</li>
+<li><b>Benchmark contamination:</b> Check for test data leaking into training.</li>
+</ul>
+<h4>Judges and humans</h4>
+<ul>
+<li><b>Human evaluation:</b> Shared rubrics and agreement between raters.</li>
+<li><b>LLM-as-judge:</b> One model scores another, checked against humans.</li>
+</ul>
+<h4>Agents and online</h4>
+<ul>
+<li><b>Agent evaluation:</b> Task completion, tool use, and recovery.</li>
+<li><b>Online experiments:</b> A/B tests with real users.</li>
+<li><b>Task time horizons (METR):</b> How long tasks an AI can finish reliably.</li>
+</ul>
+<h4>Evaluating a whole system</h4>
+<ul>
+<li><b>Held-out set:</b> Keep it out of your build instructions.</li>
+<li><b>Hard cases to include:</b> Near matches, contradictory sources, stale facts, unknowns, and service failures.</li>
+<li><b>Track:</b> Retrieval quality, citation support, task success, latency, and cost.</li>
+<li><b>Version comparison:</b> Run the new version and the baseline on identical cases. Report improvements and regressions separately.</li>
+<li><b>Better-sounding is not better:</b> Inspect an answer that reads well but scores worse.</li>
+</ul>
+<p><b>Tools:</b> Inspect AI, lm-evaluation-harness.</p></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Build a 50-example test set for one of your projects.</li>
+<li><b>Common mistake:</b> Choosing a benchmark that does not match your use case.</li>
+<li><b>Practice:</b> Explain how testing on examples used during development inflates accuracy, and sketch a separate held-out set.</li>
+<li><b>Start early:</b> Begin testing from your first project and deepen it later.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">18</span><span class="st">Hardware and Large-Scale Computing</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><ul>
+<li><b>Processors:</b> CPU for general tasks, GPU for training, TPU and NPU for specialized AI.</li>
+<li><b>Memory:</b> RAM, VRAM (GPU memory), and HBM (high-bandwidth memory).</li>
+<li><b>Bandwidth:</b> How fast data moves, often the real speed limit.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Precision:</b> FP32, BF16, FP16 trade accuracy for speed and memory.</li>
+<li><b>Distributed training:</b> Data, model, and sharded training (FSDP, ZeRO).</li>
+<li><b>Software stacks:</b> CUDA and ROCm for GPUs.</li>
+<li><b>Optimization:</b> Kernels and compilers (Triton, XLA), plus profiling.</li>
+<li><b>Data loading:</b> Keep accelerators fed to avoid idle time.</li>
+<li><b>Benchmarks:</b> MLPerf for comparing hardware.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Check how much VRAM your model needs before renting a GPU.</li>
+<li><b>Common mistake:</b> Buying hardware before measuring the bottleneck.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">19</span><span class="st">Research Practice</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><ul>
+<li><b>Research habit:</b> Question, method, result, limits.</li>
+<li><b>Evidence:</b> Preprints and peer review both need checking.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Literature review:</b> Compare studies to see what is established.</li>
+<li><b>Experimental control:</b> Change one thing at a time.</li>
+<li><b>Ablation:</b> Remove a component to measure its value.</li>
+<li><b>Reproducibility:</b> Record code, data, settings, and random seeds.</li>
+<li><b>Budgets:</b> Compare methods under realistic compute limits.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Keep a learning log with one failed experiment per week.</li>
+<li><b>Common mistake:</b> Hiding negative results.</li>
+<li><b>Check:</b> Could a stranger rerun your work from your notes?</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">20</span><span class="st">AI History</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><ul>
+<li><b>Early ideas (1950s to 1960s):</b> Turing's imitation game, the 1956 Dartmouth workshop, ELIZA.</li>
+<li><b>Setbacks (1970s to 1980s):</b> AI winters after high expectations failed.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Data-driven shift (1990s):</b> Statistical methods and Deep Blue.</li>
+<li><b>Deep learning breakthroughs (2012 to 2017):</b> ImageNet and AlexNet, AlphaGo, and the Transformer paper.</li>
+<li><b>Generative era (2020s):</b> Foundation models and ChatGPT.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Write one page on which past hype cycle matches today's, and why.</li>
+<li><b>Lesson:</b> Progress comes in waves. Hype and setbacks both happen.</li>
+</ul></div></details></div></details><details class="stage"><summary><span class="sn">21</span><span class="st">Careers and Professional Skills</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>Common roles</h4>
+<ul>
+<li><b>Data scientist:</b> Analyzes data and builds predictive models.</li>
+<li><b>ML engineer:</b> Builds and maintains models in production.</li>
+<li><b>AI application engineer:</b> Builds products using models and tools.</li>
+<li><b>Research scientist:</b> Invents new methods.</li>
+</ul>
+<h4>Other roles</h4>
+<ul>
+<li><b>Data engineer:</b> Builds data pipelines.</li>
+<li><b>MLOps and platform engineer:</b> Keeps AI systems running.</li>
+<li><b>AI evaluation and safety specialist:</b> Tests and checks safeguards.</li>
+<li><b>AI product manager:</b> Decides what to build and why.</li>
+<li><b>AI governance:</b> Manages risk and compliance.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><ul>
+<li><b>Portfolio:</b> GitHub projects with clear write-ups.</li>
+<li><b>Competitions:</b> Kaggle for practice on real data.</li>
+<li><b>Papers and courses:</b> arXiv for research, fast.ai and Andrew Ng's courses for learning.</li>
+<li><b>Freelancing and startups:</b> Sell services or build your own product.</li>
+</ul>
+<h4>Business and strategy</h4>
+<ul>
+<li><b>Pricing and unit economics:</b> Compare the cost per request with the revenue per customer.</li>
+<li><b>Build vs buy:</b> Use a ready model or API unless your needs justify building.</li>
+<li><b>Moats:</b> Lasting advantages such as unique data, distribution, and workflow fit.</li>
+</ul>
+<h4>Learning and thinking skills</h4>
+<ul>
+<li><b>Spaced repetition:</b> Review ideas at growing gaps to remember them long term.</li>
+<li><b>Deliberate practice:</b> Practice specific weak skills with fast feedback.</li>
+<li><b>Feynman technique:</b> Explain an idea simply to find what you do not understand.</li>
+<li><b>Systems thinking:</b> Look for feedback loops and bottlenecks (Theory of Constraints).</li>
+<li><b>Study loop for each topic:</b> Read the scope, ask AI to explain one example, predict the outcome, then run the exercise.</li>
+<li><b>Move-on test:</b> Show the checkpoint, explain a failure, and undo the change.</li>
+</ul>
+<h4>Human skills</h4>
+<ul>
+<li><b>Communication, product thinking, teamwork:</b> Technical skill alone rarely ships a product.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Publish one project with a README, results, and limits.</li>
+<li><b>Common mistake:</b> Collecting certificates without projects.</li>
+<li><b>Check:</b> Can you explain one of your projects clearly in two minutes?</li>
+</ul></div></details></div></details>
+<details class="stage"><summary><span class="sn">22</span><span class="st">Resource Discovery and Filtering</span></summary><div class="sbody"><details class="part"><summary><span class="pn">1</span>Concepts</summary><div class="pbody"><h4>The discovery problem</h4>
+<ul>
+<li><b>Too much to review:</b> GitHub, Hugging Face, the Chrome Web Store, YouTube, and Instagram hold far more than anyone can scan.</li>
+<li><b>Goal:</b> Describe a need in plain English, filter across sources, and get a short list with evidence for each pick. Another long directory does not solve this.</li>
+<li><b>Reality:</b> No single tool does all of it today. The closest setup is a custom search lens, plus platform filters, plus a check at the source.</li>
+</ul>
+<h4>Three jobs</h4>
+<ul>
+<li><b>Discovery:</b> Find new things you do not know yet.</li>
+<li><b>Organization:</b> Group what you already follow.</li>
+<li><b>Blocking:</b> Hide what you do not want. One tool rarely does all three.</li>
+</ul>
+<h4>Key ideas</h4>
+<ul>
+<li><b>Popularity is one signal:</b> Stars, ratings, and views are not proof of fit.</li>
+<li><b>Verify at the source:</b> Ratings, update dates, features, and prices.</li>
+<li><b>Open gap:</b> Finding credible creators you do not follow, especially on Instagram, is still unsolved. Instagram Favorites and Following only organize accounts you already know.</li>
+<li><b>Where RR Engineer fits:</b> Run several lenses together, then score each result against your filters and show the evidence.</li>
+</ul></div></details><details class="part"><summary><span class="pn">2</span>Methods and Tools</summary><div class="pbody"><h4>Custom search lens</h4>
+<ul>
+<li><b>Brave Search Goggles (free):</b> Rules that boost, downrank, or discard sites on top of Brave Search. Example: <code>$boost=3,site=github.com</code>. Host the rules on GitHub, Gist, or GitLab and submit them at search.brave.com/goggles/create.</li>
+<li><b>Kagi Lenses (paid):</b> Up to 10 included sites, 10 excluded sites, 5 included keywords, 5 excluded keywords, plus file type, region, and date range. It does not support image or video search.</li>
+<li><b>Kagi price (confirm before paying):</b> Starter is listed at $5 a month for 300 searches. Kagi's blog says unlimited search is in the $10 Professional plan. Which plans include custom lenses was not confirmed. Check kagi.com/pricing.</li>
+<li><b>Limit of both:</b> They find pages only. They do not give ratings, recency, or quality. Check each result at the source.</li>
+</ul>
+<h4>YouTube: discover, organize, block</h4>
+<ul>
+<li><b>Discover (SimilarTube, SimilarChannels):</b> Give a channel you trust and get similar ones. SimilarTube needs a sign-in, its listing showed a 2024 version, and one reviewer saw empty results. Test it on 2 or 3 channels first.</li>
+<li><b>Organize (PocketTube):</b> Groups channels into collections, shows the latest videos per group, filters by duration, and can remove Shorts on the subscriptions page. Syncs through Google Drive. Free, supported through Patreon.</li>
+<li><b>Block (BlockTube):</b> Blocks by video name, channel, keyword, and runtime, and can block Shorts. The Chrome listing shows 100,000 users, updated Feb 2026. Never paste advanced code you do not understand.</li>
+<li><b>Alternative:</b> FilterTube (Firefox) has a Whitelist Mode that shows only approved channels. Its user base is small.</li>
+<li><b>YouTube's own filter:</b> Duration over 20 minutes removes Shorts.</li>
+<li><b>Setup:</b> (1) Subscribe to 2 or 3 trusted channels, run each through SimilarTube, and subscribe to the best 5. (2) Make PocketTube groups: LLM apps, RAG and agents, MLOps, Fundamentals. (3) In BlockTube, block "you won't believe", "insane", "secret", "10x", "killer", "replaces", turn on the Shorts block, and set a minimum runtime of 10 minutes.</li>
+</ul>
+<h4>Reusable filters</h4>
+<ul>
+<li><b><a href="https://github.com/search/advanced" target="_blank" rel="noopener">GitHub</a>:</b> <code>topic:rag language:python stars:&gt;500 pushed:&gt;2026-05-01 archived:false</code>. Then check recent commits, closed issues, license, and a README with a working example.</li>
+<li><b><a href="https://huggingface.co/models" target="_blank" rel="noopener">Hugging Face</a>:</b> Filter by Task, Language, and License (Apache-2.0 or MIT if you plan to sell). Sort by Trending, then Downloads. Read the model card for results on a benchmark that matches your task.</li>
+<li><b>Chrome extensions:</b> At least 100 ratings, updated within 12 months, permissions that match the function, and read the 3 newest reviews, not the average.</li>
+<li><b>Chrome-Stats Advanced Search:</b> Shortlists extensions by function, ratings, review count, users, and last update. Its page did not load during checking, so confirm the filters and price yourself. Inspect the original Chrome Web Store listing.</li>
+</ul>
+<h4>Reference shelf</h4>
+<ul>
+<li><b>Repositories:</b> GitHub Search, GitHub Trending, Awesome lists, Awesome Stars, OSS Insight.</li>
+<li><b>Code, models, data:</b> Kaggle Notebooks and Datasets, <a href="https://huggingface.co/models" target="_blank" rel="noopener">Hugging Face Models</a>, <a href="https://huggingface.co/datasets" target="_blank" rel="noopener">Datasets</a>, and <a href="https://huggingface.co/spaces" target="_blank" rel="noopener">Spaces</a>, AI4Bharat for Indian languages.</li>
+<li><b>Run and compare models:</b> Replicate, OpenRouter, Ollama, Artificial Analysis. Confirm results on your own examples.</li>
+<li><b>Find and organize evidence:</b> arXiv, OpenReview, Google Scholar Button, Zotero Connector, DeepL for translation.</li>
+<li><b>Packages and workflows:</b> PyPI, PyPI Stats, n8n. Check dependencies and test any imported example.</li>
+<li><b>Track and publish:</b> Weights &amp; Biases, Streamlit Community Cloud. Study AWS, Azure, or Google Cloud as deployment needs grow.</li>
+<li><b>Social feeds:</b> Instagram Favorites and Following, PocketTube, BlockTube.</li>
+</ul></div></details><details class="part"><summary><span class="pn">3</span>Practice and Judgment</summary><div class="pbody"><ul>
+<li><b>Practice:</b> Run the YouTube setup above for AI engineering tutorials: discover channels, group them, and block hype.</li>
+<li><b>Practice:</b> Write one GitHub query and one Hugging Face filter for a real need. List your top 3 results with evidence.</li>
+<li><b>Common mistake:</b> Trusting popularity. High stars or ratings with no recent updates is usually a dead end.</li>
+<li><b>Check:</b> For each pick, can you show a source, the date you checked, and one limitation?</li>
+<li><b>Before paying for any tool:</b> Verify its current features and price.</li>
+</ul></div></details></div></details>
+<div class="final"><h2>Final Note</h2><p>No book on AI is ever finished. The field changes fast. This book gives you the map and the habits: learn the concept, build the method, judge the result. Keep updating it as you learn.</p><p><b>When to add a topic:</b> Add something new only when you can name the product requirement or failure that makes it necessary.</p><p><b>How this book is maintained:</b> New knowledge is added only when it fits a stage and matches the existing style. Nothing is deleted or replaced without asking you first.</p></div>
+</main>
+<script>
+(function(){
+  var stages=[].slice.call(document.querySelectorAll('details.stage'));
+  function exclusive(list,keep){list.forEach(function(d){if(d!==keep&&d.open)d.open=false;});}
+  stages.forEach(function(st){
+    var parts=[].slice.call(st.querySelectorAll(':scope > .sbody > details.part'));
+    st.addEventListener('toggle',function(){
+      if(st.open){
+        exclusive(stages,st);
+        if(!parts.some(function(p){return p.open;})&&parts[0])parts[0].open=true;
+        try{history.replaceState(null,'','#stage-'+(stages.indexOf(st)+1));}catch(e){}
+      }
+    });
+    parts.forEach(function(p){
+      p.addEventListener('toggle',function(){if(p.open)exclusive(parts,p);});
+    });
+  });
+  var b=document.getElementById('closeAll');
+  b.addEventListener('click',function(){stages.forEach(function(s){s.open=false;});});
+  var m=(location.hash||'').match(/^#stage-(\d+)$/);
+  if(m&&stages[m[1]-1])stages[m[1]-1].open=true;
+})();
+</script>
+<script>
+(function(){
+var M={"Streamlit Community Cloud":"https://docs.streamlit.io/deploy/streamlit-community-cloud","Streamlit":"https://streamlit.io/","Weights & Biases":"https://wandb.ai/","Hugging Face":"https://huggingface.co/","Kaggle":"https://www.kaggle.com/","AI4Bharat":"https://ai4bharat.iitm.ac.in/","Replicate":"https://replicate.com/explore","OpenRouter":"https://openrouter.ai/models","Artificial Analysis":"https://artificialanalysis.ai/","Ollama":"https://ollama.com/library","arXiv":"https://arxiv.org/","OpenReview":"https://openreview.net/","Zotero Connector":"https://www.zotero.org/download/","DeepL":"https://www.deepl.com/","PyPI Stats":"https://pypistats.org/","PyPI":"https://pypi.org/","n8n":"https://n8n.io/workflows/","AWS":"https://aws.amazon.com/","Azure":"https://azure.microsoft.com/","Google Cloud":"https://cloud.google.com/","GitHub Search":"https://github.com/search/advanced","GitHub Trending":"https://github.com/trending","GitHub":"https://github.com/","Git":"https://git-scm.com/","OSS Insight":"https://ossinsight.io/trending","Awesome Stars":"https://github.com/subev/awesome-stars","Awesome":"https://github.com/sindresorhus/awesome","Chrome-Stats Advanced Search":"https://chrome-stats.com/chrome/advanced/extension-search","Chrome-Stats":"https://chrome-stats.com/","Chrome Web Store":"https://chromewebstore.google.com/","Kagi Lenses":"https://help.kagi.com/kagi/features/lenses.html","kagi.com/pricing":"https://kagi.com/pricing","Brave Search Goggles":"https://search.brave.com/goggles/create","search.brave.com/goggles/create":"https://search.brave.com/goggles/create","SimilarTube":"https://chromewebstore.google.com/detail/leokjncneiocjfkalljjokhomjnpolkk","SimilarChannels":"https://www.producthunt.com/products/similarchannels","PocketTube":"https://chromewebstore.google.com/detail/kdmnjgijlmjgmimahnillepgcgeemffb","BlockTube":"https://chromewebstore.google.com/detail/blocktube/bbeaicapbccfllodepmimpkgecanonai","FilterTube":"https://addons.mozilla.org/firefox/addon/filtertube/","NumPy":"https://numpy.org/","SciPy":"https://scipy.org/","Jupyter":"https://jupyter.org/","pandas":"https://pandas.pydata.org/","DuckDB":"https://duckdb.org/","Spark":"https://spark.apache.org/","DVC":"https://dvc.org/","scikit-learn":"https://scikit-learn.org/","XGBoost":"https://xgboost.readthedocs.io/","LightGBM":"https://lightgbm.readthedocs.io/","PyTorch":"https://pytorch.org/","TensorFlow":"https://www.tensorflow.org/","Diffusers":"https://huggingface.co/docs/diffusers","ComfyUI":"https://www.comfy.org/","LangChain":"https://www.langchain.com/","LlamaIndex":"https://www.llamaindex.ai/","LangGraph":"https://langchain-ai.github.io/langgraph/","vLLM":"https://docs.vllm.ai/","Docker":"https://www.docker.com/","Kubernetes":"https://kubernetes.io/","SQLite":"https://www.sqlite.org/","PostgreSQL":"https://www.postgresql.org/","MCP":"https://modelcontextprotocol.io/","SWE-bench":"https://www.swebench.com/","METR":"https://metr.org/","Inspect AI":"https://inspect.aisi.org.uk/","lm-evaluation-harness":"https://github.com/EleutherAI/lm-evaluation-harness","MLPerf":"https://mlcommons.org/benchmarks/","fast.ai":"https://www.fast.ai/","Andrew Ng's courses":"https://www.deeplearning.ai/","NIST AI RMF":"https://www.nist.gov/itl/ai-risk-management-framework","EU AI Act":"https://artificialintelligenceact.eu/"};
+var K=Object.keys(M).sort(function(a,b){return b.length-a.length;});
+var re=new RegExp('(^|[^A-Za-z0-9_-])('+K.map(function(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')(?![A-Za-z0-9_-])','g');
+var w=document.createTreeWalker(document.querySelector('main'),NodeFilter.SHOW_TEXT,null),nodes=[],n;
+while((n=w.nextNode())){var p=n.parentNode;if(p.closest&&p.closest('a,code,summary,script,style,button,h1'))continue;nodes.push(n);}
+nodes.forEach(function(n){
+ var s=n.nodeValue,m,last=0,f=document.createDocumentFragment(),hit=false;
+ re.lastIndex=0;
+ while((m=re.exec(s))){
+  hit=true;var st=m.index+m[1].length;
+  f.appendChild(document.createTextNode(s.slice(last,st)));
+  var a=document.createElement('a');a.href=M[m[2]];a.textContent=m[2];a.target='_blank';a.rel='noopener';f.appendChild(a);
+  last=st+m[2].length;re.lastIndex=last;
+ }
+ if(hit){f.appendChild(document.createTextNode(s.slice(last)));n.parentNode.replaceChild(f,n);}
+});
+})();
+</script></body></html>
