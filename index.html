@@ -5112,7 +5112,7 @@ if(!ok){ms.hidden=false;fetch("masterbook.html",{cache:"no-cache"}).then(functio
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ov&&!ov.hidden)shut()},true)})();</script>
 <script id="mapSync">/* Mind maps: keep a copy in the Google Sheet "Maps" tab so the Claude dashboard and the website share them */
 (function(){
-var MK={rrBoardCopy1:"rrBoardDay",dmFirstCopy1:"dmFirstDay",plBoardCopy1:"plBoardDay"},RG="Maps!A1:Z20";
+var MK={rrBoardCopy1:"rrBoardDay",dmFirstCopy1:"dmFirstDay",plBoardCopy1:"plBoardDay"},RG="Maps!A1:GR20",WARN=0;
 var LS;try{LS=window.localStorage}catch(e){return}if(!LS||!window.Storage)return;
 var SP=Storage.prototype,ORIG=SP.setItem,BASE={},TS={},NW={},PEND={},T=0,READY=0,BUSY=0;
 function put(k,v){try{ORIG.call(LS,k,v)}catch(e){}}
@@ -5141,7 +5141,7 @@ async function flush(){
       else await tool("append_values",{spreadsheetId:SHEET_ID,range:"Maps!A1",values:[row]});
       BASE[k]=val;TS[k]=ts;put("mapTs:"+k,String(ts));
     }
-  }catch(e){keys.forEach(function(k){PEND[k]=1});clearTimeout(T);T=setTimeout(flush,20000)}
+  }catch(e){keys.forEach(function(k){PEND[k]=1});if(!WARN&&typeof toast==="function"){WARN=1;toast("Mind map not saved to the Sheet yet: "+String((e&&e.message)||e).slice(0,120))}clearTimeout(T);T=setTimeout(flush,20000)}
   BUSY=0;
 }
 async function pull(){
