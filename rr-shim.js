@@ -59,7 +59,7 @@
       w.innerHTML='<style>#rrKeyBox{position:fixed;inset:0;z-index:99999;background:rgba(20,26,33,.55);display:flex;align-items:center;justify-content:center;font:14px system-ui,sans-serif}'+
         '#rrKeyBox .c{background:#fff;color:#111;border:1px solid #111;border-radius:10px;padding:22px;width:min(360px,92vw);box-shadow:0 10px 30px rgba(0,0,0,.25)}'+
         '#rrKeyBox h2{margin:0 0 4px;font-size:19px}#rrKeyBox h2 b{color:#e8590c}#rrKeyBox p{margin:0 0 12px;color:#333}'+
-        '#rrKeyBox input{width:100%;box-sizing:border-box;padding:9px 10px;background:#fff;color:#000;border:1px solid #000;border-radius:6px;font-size:14px}'+
+        '#rrKeyBox input{width:100%;box-sizing:border-box;padding:9px 10px;background:#fff;color:#000;border:1px solid #000;border-radius:6px;font-size:16px}'+
         '#rrKeyBox button{margin-top:12px;width:100%;padding:9px;border:1px solid #000;border-radius:6px;background:#e8590c;color:#fff;font-weight:600;cursor:pointer}'+
         '#rrKeyBox button:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.2)}#rrKeyBox .m{min-height:18px;margin-top:8px;color:#c0262d;font-size:13px}</style>'+
         '<form class="c"><h2>RR <b>Engineer</b></h2><p>Enter your access key (only needed once in this browser).</p>'+

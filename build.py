@@ -19,6 +19,7 @@ shell = """<!DOCTYPE html>
 html,body{margin:0;height:100%;background:#3a3d42;overflow:hidden}
 #rrApp{display:block;height:100%;width:50vw;min-width:min(720px,100vw);margin:0 auto;border:0;background:#eef2f5;
 box-shadow:-22px 0 40px -2px rgba(0,0,0,.9),22px 0 40px -2px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.12)}
+@media (max-width:820px),(hover:none) and (pointer:coarse){html,body{height:100dvh}#rrApp{width:100vw;min-width:0;height:100dvh;box-shadow:none}}
 </style></head>
 <body><iframe id="rrApp" src="app.html" title="RR Engineer" allow="clipboard-read; clipboard-write; fullscreen"></iframe></body></html>
 """
