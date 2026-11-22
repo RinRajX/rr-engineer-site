@@ -779,12 +779,11 @@ function mkEx(sp,host,o){
     V.querySelectorAll("[data-f]").forEach(function(row){row.oncontextmenu=function(e){e.preventDefault();e.stopPropagation();var m=$("menu");m.innerHTML='<div class="mi" data-k="fdel"><span>Delete file</span></div>';m.style.left="0px";m.style.top="0px";m.classList.add("on");m.style.left=Math.max(4,Math.min(e.clientX,innerWidth-m.offsetWidth-4))+"px";m.style.top=Math.max(4,Math.min(e.clientY,innerHeight-m.offsetHeight-4))+"px";MENU={E:E,ids:[],fid:row.dataset.f}}});
     V.querySelectorAll("[data-fa]").forEach(function(b){b.onclick=async function(e){
       e.stopPropagation();var row=b.closest("[data-f]"),f=FILES.filter(function(q){return q.id===row.dataset.f})[0];if(!f)return;
-      if(b.dataset.fa==="x"){if(!confirm("Remove "+f.name+" from this module? The file stays in your Drive folder."))return;try{await fileDel(f)}catch(er){toast(errMsg(er))}draw();return}
+      if(b.dataset.fa==="x"){if(!(await window.rrConfirm("Remove "+f.name+" from this module? The file stays in your Drive folder.","Remove")))return;try{await fileDel(f)}catch(er){toast(errMsg(er))}draw();return}
+      if(b.dataset.fa==="v"){window.rrOpenFile(f);return}
       b.textContent="…";
-      try{var bl=await fileBlob(f);
-        if(b.dataset.fa==="d"){await window.rrSaveBlob(bl,f.name);b.textContent="Download"}
-        else{b.textContent="Preview";await window.rrViewFile(f,bl)}
-      }catch(er){toast(errMsg(er));b.textContent=b.dataset.fa==="d"?"Download":"Preview"}
+      try{var bl=await window.rrGetBlob(f);await window.rrSaveBlob(bl,f.name);b.textContent="Download"}
+      catch(er){toast(errMsg(er));b.textContent="Download"}
     }});
     var c=V.querySelector(".cpy");if(c)c.onclick=function(){var t=V.querySelector(".mt").textContent;try{navigator.clipboard.writeText(t)}catch(e){}c.classList.add("g");setTimeout(function(){c.classList.remove("g")},1000)};
   }
@@ -5115,8 +5114,18 @@ ov.hidden=false;
 if(!ok){ms.hidden=false;fetch("masterbook.html",{cache:"no-cache"}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){fr.srcdoc=t;ok=1;ms.hidden=true}).catch(function(){ms.innerHTML='Could not load it here. <a href="'+url+'" target="_blank" rel="noopener">Open the Master Book in a new tab</a>'})}};
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ov&&!ov.hidden)shut()},true)})();</script>
 <style id="fvCss">
-#fvOv{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;background:rgba(16,36,59,.62);backdrop-filter:blur(3px)}
-#fvOv.on{display:flex}
+#fvOv{position:fixed;inset:0;z-index:3000;display:flex;visibility:hidden;opacity:0;pointer-events:none;align-items:center;justify-content:center;background:rgba(16,36,59,.62);transition:opacity .16s ease,visibility 0s linear .16s}
+#fvOv.on{visibility:visible;opacity:1;pointer-events:auto;transition:opacity .16s ease}
+#fvOv #fvBox{transform:translateY(10px) scale(.985);transition:transform .22s cubic-bezier(.2,.8,.2,1);will-change:transform}
+#fvOv.on #fvBox{transform:none}
+#fvBody .fvspin{width:30px;height:30px;margin:60px auto 0;border:3px solid #d9e0e6;border-top-color:#e8590c;border-radius:50%;animation:fvsp .7s linear infinite}
+@keyframes fvsp{to{transform:rotate(360deg)}}
+#fvCf{position:fixed;inset:0;z-index:3100;display:flex;align-items:center;justify-content:center;background:rgba(16,36,59,.45);opacity:0;visibility:hidden;transition:opacity .14s ease,visibility 0s linear .14s}
+#fvCf.on{opacity:1;visibility:visible;transition:opacity .14s ease}
+#fvCf .c{background:#fff;color:#111;border:1px solid #111;border-radius:12px;padding:18px;width:min(380px,90vw);font:14px system-ui,sans-serif;box-shadow:0 14px 40px rgba(0,0,0,.3)}
+#fvCf .r{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+#fvCf button{border:1px solid #111;border-radius:8px;height:32px;padding:0 14px;font-weight:600;cursor:pointer;background:#fff;color:#111}
+#fvCf button.y{background:#c0262d;border-color:#c0262d;color:#fff}
 #fvBox{background:#fff;color:#111;border:1px solid #111;border-radius:12px;width:min(1100px,94vw);height:min(92vh,1100px);display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,.35);overflow:hidden}
 #fvHd{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #d9e0e6;flex:none}
 #fvNm{flex:1;min-width:0;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -5150,11 +5159,12 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ov&&!ov.hid
 <div id="fvOv" role="dialog" aria-modal="true" aria-label="File preview"><div id="fvBox">
 <div id="fvHd"><span id="fvNm"></span><span id="fvMeta"></span><button type="button" id="fvDl">Download</button><button type="button" id="fvX" title="Close (Esc)" aria-label="Close"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
 <div id="fvTabs"></div><div id="fvBody"></div></div></div>
+<div id="fvCf" role="dialog" aria-modal="true"><div class="c"><div class="m"></div><div class="r"><button type="button" class="n">Cancel</button><button type="button" class="y">Remove</button></div></div></div>
 <script id="fileViewer">/* Pop-up preview for any attached file: images, PDF, video, audio, Word, Excel/CSV, PowerPoint, text */
 (function(){
 var J="https://cdn.jsdelivr.net/npm/",LIB={xlsx:J+"xlsx@0.18.5/dist/xlsx.full.min.js",mammoth:J+"mammoth@1.8.0/mammoth.browser.min.js",pdf:J+"pdfjs-dist@3.11.174/build/pdf.min.js",pdfw:J+"pdfjs-dist@3.11.174/build/pdf.worker.min.js",zip:J+"jszip@3.10.1/dist/jszip.min.js"};
 var LD={},OV=document.getElementById("fvOv"),BODY=document.getElementById("fvBody"),TABS=document.getElementById("fvTabs"),URLS=[],CUR=null,SEQ=0;
-document.body.appendChild(OV);
+document.body.appendChild(OV);document.body.appendChild(document.getElementById("fvCf"));
 function load(u){return LD[u]||(LD[u]=new Promise(function(ok,no){var s=document.createElement("script");s.src=u;s.onload=function(){ok()};s.onerror=function(){delete LD[u];no(new Error("The viewer could not be loaded. Check your internet connection."))};document.head.appendChild(s)}))}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function url(b){var u=URL.createObjectURL(b);URLS.push(u);return u}
@@ -5165,7 +5175,21 @@ async function saveBlob(b,n){
   var a=document.createElement("a"),u=URL.createObjectURL(b);a.href=u;a.download=n;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},5000)}
 function save(){if(CUR)return saveBlob(CUR.blob,CUR.name)}
 window.rrSaveBlob=saveBlob;
-function close(){OV.classList.remove("on");SEQ++;BODY.innerHTML="";TABS.innerHTML="";URLS.forEach(function(u){URL.revokeObjectURL(u)});URLS=[];CUR=null}
+var LIBFOR={pdf:[LIB.pdfw,LIB.pdf],docx:[LIB.mammoth],sheet:[LIB.xlsx],csv:[LIB.xlsx],pptx:[LIB.zip]};
+/* files are fetched once and kept for quick re-opening; hovering a file button starts the fetch early */
+var BC={},BCN=[];
+window.rrGetBlob=function(f){if(BC[f.id])return BC[f.id];var p=fileBlob(f);BC[f.id]=p;BCN.push(f.id);
+  p.catch(function(){delete BC[f.id]});while(BCN.length>25){delete BC[BCN.shift()]}return p};
+window.rrOpenFile=function(f){return window.rrViewFile(f,window.rrGetBlob(f))};
+document.addEventListener("pointerover",function(e){var b=e.target.closest&&e.target.closest('.fr [data-fa="v"],.fr [data-fa="d"]');if(!b||b.__pf)return;b.__pf=1;
+  var row=b.closest(".fr"),f=(typeof FILES!=="undefined"?FILES:[]).filter(function(q){return q.id===row.dataset.f})[0];if(!f)return;
+  window.rrGetBlob(f);var k=kind(f.name,f.mime);if(LIBFOR[k])LIBFOR[k].forEach(function(u){load(u).catch(function(){})})},{passive:true});
+/* in-page confirm (browser pop-ups are blocked inside Claude) */
+window.rrConfirm=function(text,yes){return new Promise(function(done){var c=document.getElementById("fvCf");c.querySelector(".m").textContent=text;c.querySelector(".y").textContent=yes||"OK";c.classList.add("on");
+  function end(v){c.classList.remove("on");c.querySelector(".y").onclick=c.querySelector(".n").onclick=null;document.removeEventListener("keydown",kd,true);done(v)}
+  function kd(e){if(e.key==="Escape"){e.stopPropagation();end(false)}if(e.key==="Enter"){e.preventDefault();end(true)}}
+  c.querySelector(".y").onclick=function(){end(true)};c.querySelector(".n").onclick=function(){end(false)};document.addEventListener("keydown",kd,true);setTimeout(function(){c.querySelector(".n").focus()},30)})};
+function close(){if(!OV.classList.contains("on"))return;OV.classList.remove("on");var s=++SEQ,old=URLS;URLS=[];CUR=null;setTimeout(function(){if(s!==SEQ)return;BODY.innerHTML="";TABS.innerHTML="";old.forEach(function(u){URL.revokeObjectURL(u)})},200)}
 document.getElementById("fvX").onclick=close;document.getElementById("fvDl").onclick=save;
 OV.addEventListener("mousedown",function(e){if(e.target===OV)close()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&OV.classList.contains("on")){e.stopPropagation();e.preventDefault();close()}},true);
@@ -5211,10 +5235,12 @@ var R={
     BODY.innerHTML='<div class="fvmsg" style="padding:0 0 10px;font-size:12.5px">Slide text and pictures (the exact slide layout is not shown here; download for the full design).</div>'+h}
 };
 window.rrViewFile=async function(fl,blob){
-  var s=++SEQ;CUR={blob:blob,name:fl.name};
-  document.getElementById("fvNm").textContent=fl.name;document.getElementById("fvMeta").textContent=size(blob.size||fl.size);
-  TABS.innerHTML="";BODY.innerHTML='<div class="fvmsg">Opening…</div>';OV.classList.add("on");
-  var k=kind(fl.name,fl.mime||blob.type);
+  var s=++SEQ;CUR=null;URLS.forEach(function(u){URL.revokeObjectURL(u)});URLS=[];
+  document.getElementById("fvNm").textContent=fl.name;document.getElementById("fvMeta").textContent=size(fl.size||(blob&&blob.size));
+  TABS.innerHTML="";BODY.innerHTML='<div class="fvspin" aria-label="Loading"></div>';OV.classList.add("on");
+  var k=kind(fl.name,fl.mime||(blob&&blob.type));
+  try{if(LIBFOR[k])LIBFOR[k].forEach(function(u){load(u).catch(function(){})});blob=await blob;if(s!==SEQ)return}catch(e){if(s===SEQ)msg("This file could not be loaded ("+String((e&&e.message)||e).slice(0,120)+").");return}
+  CUR={blob:blob,name:fl.name};
   if(blob.type!==fl.mime&&fl.mime&&k!=="other")blob=CUR.blob=new Blob([blob],{type:fl.mime});
   try{if(k==="other")return msg("There is no preview for this kind of file.",1);await R[k](blob,s)}
   catch(e){if(s===SEQ)msg("This file could not be shown here ("+String((e&&e.message)||e).slice(0,120)+").",1)}
@@ -5222,7 +5248,11 @@ window.rrViewFile=async function(fl,blob){
 })();</script>
 <style id="sideFinal">/* side panels in all tabs: no divider line, open space before the content */
 .sw.au>.sd{border-right:0!important}
-.sw.au.pk>.exw,.sw.au.pin>.exw{padding-left:254px!important}
+.sw.au.pin>.exw{padding-left:254px!important}
+.sw.au.pk:not(.pin)>.exw{padding-left:0!important}
+.sw.au.pk:not(.pin)>.sd{box-shadow:10px 0 26px -6px rgba(16,36,59,.22);border-radius:0 10px 10px 0}
+.sw.au>.sd{will-change:transform}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 <style id="viewFix">
 /* item content: the whole view scrolls down to the files and preview */
@@ -5316,6 +5346,25 @@ function busyUI(){
 }
 ["pointerdown","keydown","wheel"].forEach(function(ev){document.addEventListener(ev,function(){ACT=Date.now()},true)});
 var DATA=0;
+/* quiet refresh: only redraw what really changed, so nothing flickers */
+function J(x){try{return JSON.stringify(x)}catch(e){return ""}}
+async function smart(){
+  if(typeof readRegistry!=="function"){if(typeof loadEverything==="function")await loadEverything();return}
+  try{
+    var a0=J(ALL),f0=J(typeof FILES!=="undefined"?FILES:0),s0=J([typeof TAGS!=="undefined"?TAGS:0,typeof RAWD!=="undefined"?RAWD:0,typeof RT!=="undefined"?RT:0,typeof BK!=="undefined"?BK:0,typeof VIEWS!=="undefined"?VIEWS:0]),d0=typeof RAWD!=="undefined"?RAWD:"";
+    var all=await readRegistry(),reg=J(all)!==a0;if(reg){ALL=all;rebuild()}
+    try{await setLoad()}catch(e){}
+    try{var fl=await readFiles();if(J(fl)!==f0){FILES=fl;reg=1}}catch(e){}
+    var set=J([typeof TAGS!=="undefined"?TAGS:0,typeof RAWD!=="undefined"?RAWD:0,typeof RT!=="undefined"?RT:0,typeof BK!=="undefined"?BK:0,typeof VIEWS!=="undefined"?VIEWS:0])!==s0;
+    if(reg||set)drawAll();
+    if(set&&typeof edLoad==="function"&&typeof RAWD!=="undefined"&&RAWD!==d0)edLoad(RAWD);
+    if(set&&typeof window.bkRefresh==="function")window.bkRefresh();
+    if(typeof LIB!=="undefined"&&LIB&&!LIB.pending&&typeof libReadSheet==="function"){var s=await libReadSheet();
+      if(s.saved.meta&&J(s.saved)!==J(LIB.saved)){LIB.rows=s.rows;LIB.saved=s.saved;LIB.data=libAssemble(s.saved);LIB.loaded=true;LIB.frameBuilt=false;if(typeof TAB!=="undefined"&&TAB==="lib")buildFrame()}}
+    if(typeof cacheSave==="function")cacheSave();
+    if(typeof setStatus==="function"&&typeof hm==="function")setStatus("ok","Synced "+hm());
+  }catch(e){}
+}
 async function poll(){
   try{
     if(document.visibilityState==="visible"&&!BUSY){
@@ -5323,7 +5372,7 @@ async function poll(){
       if(need.length){var cur=await readMaps();need.forEach(function(k){var r=cur[k];if(!r||!r.val)return;var loc=lget(k);
         if(loc==null||loc===BASE[k])take(k,r)})}
       Object.keys(revs).forEach(function(id){if(id!==ME&&revs[id]!==SEEN[id])DATA=1});SEEN=revs;
-      if(DATA&&!busyUI()&&typeof loadEverything==="function"){DATA=0;await loadEverything()}
+      if(DATA&&!busyUI()){DATA=0;await smart()}
     }
   }catch(e){}
   POLL=setTimeout(poll,DATA?6000:20000);
