@@ -12,19 +12,19 @@
 <script id="mobDetect">(function(){try{var c=matchMedia("(pointer:coarse)").matches,s=Math.min(screen.width,screen.height);if(c||(navigator.maxTouchPoints>0&&s<=900))document.documentElement.classList.add("mob")}catch(e){}})()</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script id="rrGate">(function(){var PIN="3223",ok=false,D=document,R=D.documentElement;
-var st=D.createElement("style");st.textContent="#rrGate{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:#14171a;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}#rgc{display:grid;gap:16px;justify-items:center}#rgc svg{width:44px;height:44px}#rgb{display:flex;gap:10px}#rgb i{display:flex;align-items:center;justify-content:center;width:46px;height:54px;border:1.5px solid #fff;border-radius:10px;font-style:normal;font-size:28px;padding-top:8px;box-sizing:border-box;transition:background .15s}#rgb i.f{background:#ffffff33}#rgm{margin:0;min-height:18px;font-size:13px;color:#ff8a8a}#rgi{position:absolute;opacity:0;width:1px;height:1px;border:0;padding:0}";
+<script id="rrGate">(function(){var PIN="3223",ok=false,D=document,R=D.documentElement,st,d,inp,bx,msg,c,CK=null;function any(s){return !!(s&&(s.dump||s.rr||s.lib))}try{CK=JSON.parse(localStorage.getItem("aie-locks"))}catch(e){}var offState=!!(CK&&!any(CK));if(offState)ok=true;function foc(){try{inp&&inp.focus()}catch(e){}}function release(){ok=true;if(d){d.remove();d=null}if(st){st.remove();st=null}}function build(){ok=false;
+st=D.createElement("style");st.textContent="#rrGate{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:#14171a;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}#rgc{display:grid;gap:16px;justify-items:center}#rgc svg{width:44px;height:44px}#rgb{display:flex;gap:10px}#rgb i{display:flex;align-items:center;justify-content:center;width:46px;height:54px;border:1.5px solid #fff;border-radius:10px;font-style:normal;font-size:28px;padding-top:8px;box-sizing:border-box;transition:background .15s}#rgb i.f{background:#ffffff33}#rgm{margin:0;min-height:18px;font-size:13px;color:#ff8a8a}#rgi{position:absolute;opacity:0;width:1px;height:1px;border:0;padding:0}";
 R.appendChild(st);
-var d=D.createElement("div");d.id="rrGate";
+d=D.createElement("div");d.id="rrGate";
 d.innerHTML='<div id="rgc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><b>Enter PIN</b><div id="rgb"><i></i><i></i><i></i><i></i></div><p id="rgm"></p></div><input id="rgi" type="text" inputmode="numeric" autocomplete="off" maxlength="4" aria-label="PIN">';
 R.appendChild(d);
-var inp=d.querySelector("#rgi"),bx=d.querySelectorAll("#rgb i"),msg=d.querySelector("#rgm"),c=d.querySelector("#rgc");
+inp=d.querySelector("#rgi");bx=d.querySelectorAll("#rgb i");msg=d.querySelector("#rgm");c=d.querySelector("#rgc");
 function draw(n){for(var k=0;k<4;k++){bx[k].textContent=k<n?"*":"";bx[k].classList.toggle("f",k<n)}}
 function foc(){try{inp.focus()}catch(e){}}
 function open(){ok=true;d.remove();st.remove();try{if(typeof TLOK!=="undefined"){TLOK=true;if(typeof tlApply==="function")tlApply()}}catch(e){}}
 d.addEventListener("pointerdown",foc);setTimeout(foc,50);setTimeout(foc,400);
 inp.addEventListener("input",function(){var v=inp.value.replace(/\D/g,"").slice(0,4);inp.value=v;draw(v.length);msg.textContent="";
-if(v.length===4){if(v===PIN)open();else{msg.textContent="Wrong PIN. Try again.";try{c.animate([{transform:"translateX(0)"},{transform:"translateX(-10px)"},{transform:"translateX(10px)"},{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],{duration:350})}catch(e){}setTimeout(function(){inp.value="";draw(0)},350)}}});
+if(v.length===4){if(v===PIN)open();else{msg.textContent="Wrong PIN. Try again.";try{c.animate([{transform:"translateX(0)"},{transform:"translateX(-10px)"},{transform:"translateX(10px)"},{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],{duration:350})}catch(e){}setTimeout(function(){inp.value="";draw(0)},350)}}});}if(!offState)build();window.rrGateSync=function(s,local){if(!any(s)){offState=true;release()}else if(offState){offState=false;if(local)ok=true;else build()}};
 addEventListener("keydown",function(e){if(!ok){if(e.target!==inp)foc();e.stopPropagation()}},true);
 addEventListener("load",function(){if(ok){try{if(typeof TLOK!=="undefined"){TLOK=true;if(typeof tlApply==="function")tlApply()}}catch(e){}}else foc()});
 })();</script>
@@ -630,7 +630,7 @@ function sendTo(ids,toRR){
 }
 function ensureInbox(){var f=TOP.dy.filter(function(x){return x.Name==="Inbox"})[0];if(f)return f.ID;var id=addNew({sp:"dy",Name:"Inbox",Type:"Category",Parent:""});rebuild();return id}
 async function setPut(k,val){var v=await readRange("Settings!A1:B80"),row=0;for(var i=1;i<v.length;i++)if(v[i]&&v[i][0]===k)row=i+1;if(row)await tool("update_values",{spreadsheetId:SHEET_ID,range:"Settings!B"+row,values:[[val]]});else await tool("append_values",{spreadsheetId:SHEET_ID,range:"Settings!A1",values:[[k,val]]})}
-async function setLoad(){var v=await readRange("Settings!A1:B80"),o={};v.forEach(function(r){if(r&&r[0])o[r[0]]=r[1]});RAWD=o["ui:design2"]||"";try{var q0=JSON.parse(o["rr:tags"]||"{}");RT={rr:q0.rr||[],fd:q0.fd||[]}}catch(e){}try{var LK=JSON.parse(o["ui:locks"]);if(LK&&typeof TLS!=="undefined"){TLS={dump:+!!LK.dump,rr:+!!LK.rr,lib:+!!LK.lib};try{localStorage.setItem("aie-locks",JSON.stringify(TLS))}catch(e){}if(typeof tlApply==="function")tlApply()}}catch(e){}BK={dy:o["bk:dy"]||"",rr:o["bk:rr"]||"",pl:o["bk:pl"]||""};try{if(window.bkRefresh)bkRefresh()}catch(e){}try{TAGS=JSON.parse(o["dy:tags"])}catch(e){TAGS=[]}if(!Array.isArray(TAGS)||!TAGS.length)TAGS=DEFTAGS.slice();try{VIEWS=JSON.parse(o["dy:views"])}catch(e){VIEWS=[]}if(!Array.isArray(VIEWS))VIEWS=[]}
+async function setLoad(){var v=await readRange("Settings!A1:B80"),o={};v.forEach(function(r){if(r&&r[0])o[r[0]]=r[1]});RAWD=o["ui:design2"]||"";try{var q0=JSON.parse(o["rr:tags"]||"{}");RT={rr:q0.rr||[],fd:q0.fd||[]}}catch(e){}try{var LK=JSON.parse(o["ui:locks"]);if(LK&&typeof TLS!=="undefined"){TLS={dump:+!!LK.dump,rr:+!!LK.rr,lib:+!!LK.lib};try{localStorage.setItem("aie-locks",JSON.stringify(TLS))}catch(e){}if(typeof tlApply==="function")tlApply();try{window.rrGateSync&&window.rrGateSync(TLS)}catch(e){}}}catch(e){}BK={dy:o["bk:dy"]||"",rr:o["bk:rr"]||"",pl:o["bk:pl"]||""};try{if(window.bkRefresh)bkRefresh()}catch(e){}try{TAGS=JSON.parse(o["dy:tags"])}catch(e){TAGS=[]}if(!Array.isArray(TAGS)||!TAGS.length)TAGS=DEFTAGS.slice();try{VIEWS=JSON.parse(o["dy:views"])}catch(e){VIEWS=[]}if(!Array.isArray(VIEWS))VIEWS=[]}
 function saveTags(){enq(function(){return setPut("dy:tags",JSON.stringify(TAGS))})}
 function saveViews(){enq(function(){return setPut("dy:views",JSON.stringify(VIEWS))})}
 
@@ -2653,7 +2653,7 @@ function tlApply(){
 }
 var LKC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',LKO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>',LKT=[["dump","tabDump"],["rr","tabRR"],["lib","tabLib"]];
 function tlIcons(){LKT.forEach(function(a){})}
-function tlSave(){try{localStorage.setItem("aie-locks",JSON.stringify(TLS))}catch(e){}try{setPut("ui:locks",JSON.stringify(TLS))}catch(e){}tlIcons()}
+function tlSave(){try{localStorage.setItem("aie-locks",JSON.stringify(TLS))}catch(e){}try{setPut("ui:locks",JSON.stringify(TLS))}catch(e){}try{window.rrGateSync&&window.rrGateSync(TLS,1)}catch(e){}tlIcons()}
 var TLM=null,TLN={dump:"Dumpyard",rr:"RR Engineer",lib:"Prompt Library"};
 function tlMenuClose(){if(TLM){TLM.remove();TLM=null}}
 function tlTabOf(h){var p=h.closest("#pDump,#pRR");return p?(p.id==="pDump"?"dump":"rr"):"lib"}
