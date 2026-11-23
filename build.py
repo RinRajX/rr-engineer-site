@@ -38,4 +38,5 @@ if len(sys.argv) > 3:
     pathlib.Path(sys.argv[3]).write_text(akify(src), encoding="utf-8")
 if len(sys.argv) > 2:
     shutil.copyfile(sys.argv[2], here / "masterbook.html")
+# NOTE: the PIN gate (script id=rrGate, PIN 3223) lives inside the dashboard source index.html, so rebuilds keep it.
 print("built app.html", len(app), "bytes + index.html shell")
