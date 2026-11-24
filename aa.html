@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>AA Prompt Library</title>
+<link rel="manifest" href="aa.webmanifest">
+<meta name="theme-color" content="#14171a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AA">
+<link rel="icon" href="icons/aa-192.png">
+<link rel="apple-touch-icon" href="icons/aa-apple.png">
+<style>
+html,body{margin:0;height:100%;background:#3a3d42;overflow:hidden}
+#rrApp{display:block;height:100%;width:50vw;min-width:min(720px,100vw);margin:0 auto;border:0;background:#eef2f5;
+box-shadow:-22px 0 40px -2px rgba(0,0,0,.9),22px 0 40px -2px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.12)}
+@media (max-width:820px),(hover:none) and (pointer:coarse){html,body{height:100dvh}#rrApp{width:100vw;min-width:0;height:100dvh;box-shadow:none}}
+</style></head>
+<body><iframe id="rrApp" src="akapp.html" title="RR Engineer" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(function(r){document.addEventListener("visibilitychange",function(){if(!document.hidden)r.update()})}).catch(function(){})</script>
+</body></html>

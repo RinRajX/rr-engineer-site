@@ -1,0 +1,19 @@
+{
+  "id": "./?app=rr",
+  "name": "RR Engineer",
+  "short_name": "RR",
+  "description": "RR Engineer dashboard",
+  "start_url": "./?app=rr",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone"],
+  "orientation": "any",
+  "background_color": "#14171a",
+  "theme_color": "#e8590c",
+  "icons": [
+    {"src": "icons/rr-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/rr-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/rr-mask-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable"},
+    {"src": "icons/rr-mask-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

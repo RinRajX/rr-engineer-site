@@ -15,25 +15,41 @@ shell = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>RR Engineer</title>
+__PWA__
 <style>
 html,body{margin:0;height:100%;background:#3a3d42;overflow:hidden}
 #rrApp{display:block;height:100%;width:50vw;min-width:min(720px,100vw);margin:0 auto;border:0;background:#eef2f5;
 box-shadow:-22px 0 40px -2px rgba(0,0,0,.9),22px 0 40px -2px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.12)}
 @media (max-width:820px),(hover:none) and (pointer:coarse){html,body{height:100dvh}#rrApp{width:100vw;min-width:0;height:100dvh;box-shadow:none}}
 </style></head>
-<body><iframe id="rrApp" src="app.html" title="RR Engineer" allow="clipboard-read; clipboard-write; fullscreen"></iframe></body></html>
+<body><iframe id="rrApp" src="app.html" title="RR Engineer" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+__SW__</body></html>
 """
-(here / "index.html").write_text(shell, encoding="utf-8")
-# AK = the Prompt Library tab shown alone (same page, other tabs and the top bar hidden)
+AKREDIR = '<!DOCTYPE html><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>AA Prompt Library</title><script>location.replace("aa.html"+location.search+location.hash)</script><a href="aa.html">AA Prompt Library</a>\n'
+# Installable phone app (Chrome menu > Install app): manifest + icons + service worker (sw.js)
+PWA = ('<link rel="manifest" href="{m}">\n<meta name="theme-color" content="{c}">\n'
+       '<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-capable" content="yes">\n'
+       '<meta name="apple-mobile-web-app-title" content="{t}">\n<link rel="icon" href="icons/{i}-192.png">\n'
+       '<link rel="apple-touch-icon" href="icons/{i}-apple.png">')
+SW = ('<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js",{updateViaCache:"none"})'
+      '.then(function(r){document.addEventListener("visibilitychange",function(){if(!document.hidden)r.update()})}).catch(function(){})</script>\n')
+shell = shell.replace("__SW__", SW)
+rrshell = shell.replace("__PWA__", PWA.format(m="manifest.webmanifest", c="#e8590c", t="RR", i="rr"))
+akshell = shell.replace("__PWA__", PWA.format(m="aa.webmanifest", c="#14171a", t="AA", i="aa"))
+
+(here / "index.html").write_text(rrshell, encoding="utf-8")
+# AA (formerly AK) = the Prompt Library tab shown alone (same page, other tabs and the top bar hidden)
 AKCSS = ('<style id="akOnly">#top,#pDump,#pRR,#tabLock,#tlMenu{display:none!important}'
          '#libPanel.lk,.panel.lk{filter:none!important}</style>\n')
-def akify(x, title="AK Prompt Library"):
+def akify(x, title="AA Prompt Library"):
     x = x.replace('<head>\n', '<head>\n' + AKCSS, 1)
     x = x.replace('<title>RR Engineer</title>', '<title>' + title + '</title>', 1)
     i = x.rfind('</body>')
     return x[:i] + '<script>try{setTab("lib")}catch(e){}</script>\n' + x[i:]
 (here / "akapp.html").write_text(akify(app), encoding="utf-8")
-(here / "ak.html").write_text(shell.replace('src="app.html"', 'src="akapp.html"').replace('<title>RR Engineer</title>', '<title>AK Prompt Library</title>'), encoding="utf-8")
+(here / "aa.html").write_text(akshell.replace('src="app.html"', 'src="akapp.html"').replace('<title>RR Engineer</title>', '<title>AA Prompt Library</title>'), encoding="utf-8")
+# old AK link keeps working: sends visitors to aa.html
+(here / "ak.html").write_text(AKREDIR, encoding="utf-8")
 if len(sys.argv) > 3:
     pathlib.Path(sys.argv[3]).write_text(akify(src), encoding="utf-8")
 if len(sys.argv) > 2:
