@@ -34,8 +34,8 @@ PWA = ('<link rel="manifest" href="{m}">\n<meta name="theme-color" content="{c}"
 SW = ('<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js",{updateViaCache:"none"})'
       '.then(function(r){document.addEventListener("visibilitychange",function(){if(!document.hidden)r.update()})}).catch(function(){})</script>\n')
 shell = shell.replace("__SW__", SW)
-rrshell = shell.replace("__PWA__", PWA.format(m="manifest.webmanifest", c="#e8590c", t="RR", i="rr"))
-akshell = shell.replace("__PWA__", PWA.format(m="aa.webmanifest", c="#14171a", t="AA", i="aa"))
+rrshell = shell.replace("__PWA__", PWA.format(m="rr-manifest.json", c="#e8590c", t="RR", i="rr"))
+akshell = shell.replace("__PWA__", PWA.format(m="aa-manifest.json", c="#14171a", t="AA", i="aa"))
 
 (here / "index.html").write_text(rrshell, encoding="utf-8")
 # AA (formerly AK) = the Prompt Library tab shown alone (same page, other tabs and the top bar hidden)

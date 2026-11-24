@@ -2,7 +2,7 @@
    Data (Google Sheet via Apps Script) is never cached, so sync works exactly as before. */
 var C="rr-app";
 var SHELL=["./","index.html","aa.html","ak.html","app.html","akapp.html","masterbook.html","rr-shim.js",
- "manifest.webmanifest","aa.webmanifest","icons/rr-192.png","icons/rr-512.png","icons/aa-192.png","icons/aa-512.png"];
+ "rr-manifest.json","aa-manifest.json","icons/rr-192.png","icons/rr-512.png","icons/aa-192.png","icons/aa-512.png"];
 self.addEventListener("install",function(e){
   self.skipWaiting();
   e.waitUntil(caches.open(C).then(function(c){return Promise.all(SHELL.map(function(u){
