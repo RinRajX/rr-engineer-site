@@ -7,8 +7,9 @@
 
 <html lang="en" data-v="2" data-open="panel">
 <head>
-<style id="akOnly">#top,#pDump,#pRR,#tabLock,#tlMenu{display:none!important}#libPanel.lk,.panel.lk{filter:none!important}</style>
+<style id="akOnly">#top,#pDump,#pRR,#tabLock,#tlMenu{display:none!important}#libPanel.lk,.panel.lk{filter:none!important}html.mob body{padding-bottom:0!important}</style>
 <meta name="robots" content="noindex,nofollow">
+<script>window.RRV="647c7413c40a"</script>
 <script src="rr-shim.js"></script>
 <script id="mobDetect">(function(){try{var c=matchMedia("(pointer:coarse)").matches,s=Math.min(screen.width,screen.height);if(c||(navigator.maxTouchPoints>0&&s<=900))document.documentElement.classList.add("mob")}catch(e){}})()</script>
 <meta charset="utf-8">
@@ -5816,6 +5817,35 @@ all();
 var mt=0;new MutationObserver(function(){if(mt)return;mt=requestAnimationFrame(function(){mt=0;all()})}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+<style id="mobNav">
+html.mob body #top #dlBtn::before,html.mob body #top #dlBtn::after{content:none!important;display:none!important}
+html.mob{--nb:calc(58px + env(safe-area-inset-bottom))}
+html.mob body{box-sizing:border-box!important;padding-bottom:var(--nb)!important}
+html.mob #top,html.mob body.thide #top{position:fixed!important;top:auto!important;bottom:0!important;left:0!important;right:0!important;transform:translate3d(0,0,0)!important;pointer-events:auto!important;display:flex!important;align-items:stretch!important;justify-content:space-between!important;gap:0!important;height:var(--nb)!important;min-height:0!important;padding:0 4px env(safe-area-inset-bottom)!important;box-sizing:border-box!important;background:#111!important;border:0!important;border-top:1px solid #262626!important;box-shadow:none!important;z-index:60!important;transition:none!important}
+html.mob #top .tl,html.mob #top .tc,html.mob #top .tr{display:contents!important}
+html.mob #top #status{display:none!important}
+html.mob body #top #dlBtn{order:1}html.mob body #top .tc #tabDump{order:2}html.mob body #top .tc #tabRR{order:3}html.mob body #top .tc #tabLib{order:4}html.mob body #top #refresh{order:5}
+html.mob body #top #dlBtn,html.mob body #top #refresh,html.mob body #top .tc .tab{flex:1 1 0!important;width:auto!important;height:58px!important;min-width:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:#8e8e8e!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:0!important;letter-spacing:0!important;line-height:0!important;position:relative;overflow:visible!important;box-shadow:none!important;-webkit-tap-highlight-color:transparent;transition:color .22s ease!important;transform:none!important}
+html.mob body #top #dlBtn svg,html.mob body #top #refresh svg{width:25px!important;height:25px!important;transition:transform .3s cubic-bezier(.3,1.5,.5,1)}
+html.mob body #top .tc .tab::after{content:none!important;display:none!important}
+html.mob body #top .tc .tab::before{content:""!important;display:block!important;width:26px!important;height:26px!important;background:currentColor!important;-webkit-mask:var(--ic) center/contain no-repeat!important;mask:var(--ic) center/contain no-repeat!important;transition:transform .3s cubic-bezier(.3,1.5,.5,1)!important}
+html.mob body #top .tc #tabDump{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3'/%3E%3C/svg%3E")}
+html.mob body #top .tc #tabLib{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6v13M12 6v13M21 6v13'/%3E%3C/svg%3E")}
+html.mob body #top .tc #tabRR::before{content:"RR"!important;width:auto!important;height:auto!important;background:transparent!important;-webkit-mask:none!important;mask:none!important;font:800 11.5px/1 system-ui,-apple-system,sans-serif!important;letter-spacing:.6px!important;padding:5px 5px 4px!important;border:2px solid currentColor!important;border-radius:7px!important;transition:transform .3s cubic-bezier(.3,1.5,.5,1),background-color .22s ease,color .22s ease!important}
+html.mob body #top .tc .tab.on,html.mob body #top .tc .tab.on:hover{color:#fff!important;background:transparent!important}
+html.mob body #top .tc .tab.on::before{transform:scale(1.1)!important;animation:nbPop .34s cubic-bezier(.3,1.5,.5,1)!important}
+html.mob body #top .tc #tabRR.on::before{background:#fff!important;color:#111!important;border-color:#fff!important}
+html.mob body #top .tc .tab:active::before,html.mob body #top #dlBtn:active svg,html.mob body #top #refresh:active svg{transform:scale(.86)}
+html.mob body #top #dlBtn.fl,html.mob body #top #refresh.fl,html.mob body #top #dlBtn.gr,html.mob body #top #refresh.gr{color:#2fb344!important;background:transparent!important}
+@keyframes nbPop{0%{transform:scale(.8)}60%{transform:scale(1.18)}100%{transform:scale(1.1)}}
+html.mob #toast{bottom:calc(var(--nb) + 12px)!important}
+html.mob #tabLock{top:0!important;bottom:var(--nb)!important}
+html.mob #dlMenu{position:fixed!important;transform-origin:bottom left}
+html.mob #dlMenu.on{animation:nbMenu .2s cubic-bezier(.2,.8,.2,1)}
+@keyframes nbMenu{from{opacity:0;transform:translate3d(0,8px,0) scale(.96)}to{opacity:1;transform:none}}
+</style>
+<script id="mobNavJs">(function(){var b=document.getElementById("dlBtn"),m=document.getElementById("dlMenu");if(!b||!m)return;
+b.addEventListener("click",function(){if(!document.documentElement.classList.contains("mob")||!m.classList.contains("on"))return;var r=b.getBoundingClientRect();m.style.left=Math.max(8,Math.min(r.left,innerWidth-m.offsetWidth-8))+"px";m.style.top=Math.max(8,r.top-m.offsetHeight-8)+"px"})})()</script>
 <script>try{setTab("lib")}catch(e){}</script>
 </body>
 </html>

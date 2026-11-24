@@ -84,4 +84,15 @@
     if(name==="downloads")return downloads;
     return null; /* db (Discuss tray) stays in this browser on the website */
   }};
+
+  /* Phone app: "Install app" in the Download menu (asks the outer page), and Sync loads a newer app version if there is one */
+  function inst(){var m=document.getElementById("dlMenu");if(!m)return;var i=document.getElementById("dlInst");
+    if(!i){i=document.createElement("div");i.id="dlInst";i.textContent="Install app";i.style.display="none";m.appendChild(i);
+      i.addEventListener("click",function(e){e.stopPropagation();m.classList.remove("on");try{parent.postMessage({rr:"install"},"*")}catch(x){}})}
+    return i}
+  addEventListener("message",function(e){var d=e.data||{};if(d.rr==="inst"){var i=inst();if(i)i.style.display=d.can?"":"none"}});
+  addEventListener("load",function(){inst();try{if(parent!==window)parent.postMessage({rr:"hello"},"*")}catch(x){}});
+  function upd(){if(!window.RRV)return;fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){
+    if(j&&j.v&&j.v!==window.RRV){try{if(parent!==window)parent.postMessage({rr:"reload"},"*");else location.reload()}catch(x){location.reload()}}}).catch(function(){})}
+  document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("#refresh"))upd()},true);
 })();
